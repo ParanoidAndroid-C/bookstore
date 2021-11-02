@@ -1,0 +1,20 @@
+html
+    head
+        title Welcome
+        link(href='/stylesheets/login.css' rel='stylesheet')      
+        meta(charset="utf-8")
+    body
+        div#main
+            h1 Sign In
+            input(type='text' id="username" placeholder='Username')
+            br
+            input(type='text' id="password" placeholder='Password')
+            br
+            input(type="checkbox" id="owner")
+            | Sign in as a bookstore owner
+            br
+            button(type='button' onclick='signIn()') Sign In
+            br
+            a(href='/register') Don't have an account? Sign up here
+            
+script(src='/public/login.js')
