@@ -1,0 +1,19 @@
+html
+    head
+    Title Register
+    link(href='/stylesheets/login.css' rel='stylesheet')
+    meta(charset="utf-8")
+
+    body#main
+        h1 Sign Up
+        input#usernameR(type='text' placeholder='Enter Your Username' required='')
+        br
+        input#passwordR(type='password' placeholder='Enter Your Password' required='')
+        br
+        button#signUpB(type='button' onclick='signUp()') Sign Up
+        br
+        p
+        | already have an account? 
+        a(href='/login') Log in here
+
+script(src='/public/register.js')

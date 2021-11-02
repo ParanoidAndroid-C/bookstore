@@ -74,3 +74,24 @@ app.post("/login", (req, res, next) => {
     }
 
 });
+
+app.get("/logout", (req, res, next) => {
+	if (req.session.loggedin) {
+		req.session.loggedin = false;
+		req.session.username = undefined;
+		let content = pug.renderFile("pages/login.pug");
+		res.statusCode = 200;
+		res.setHeader("Content-Type", "text/html");
+		res.end(content);
+	} else {
+		res.status(404).send("You cannot log out because you aren't logged in.");
+	}
+});
+
+// register
+app.get("/register", (req, res, next)=> {
+	let content = pug.renderFile("pages/register.pug");
+	res.statusCode = 200;
+	res.setHeader("Content-Type", "text/html");
+	res.end(content);
+});
