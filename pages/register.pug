@@ -6,10 +6,26 @@ html
 
     body#main
         h1 Sign Up
-        input#usernameR(type='text' placeholder='Enter Your Username' required='')
+        input#nameR(type='text' placeholder='Enter Your Username' required)
         br
-        input#passwordR(type='password' placeholder='Enter Your Password' required='')
+        input#emailR(type='text' placeholder='Enter Your Email' required)
         br
+        input#ageR(type='number' placeholder='Age' required min=6 max=99)
+        br
+        input#genreR(type='text' placeholder='Enter Your Favourite Genre' required='')
+        br
+        input#passwordR(type='password' placeholder='Enter Your Password' required)
+        br
+        #addressForm
+          h3 Address Information
+          input(type="text" placeholder="Street Address" id="address" required) 
+          input(type="text" placeholder="Apartment #" id="apt") 
+          br
+          input(type="text" placeholder="City" id="city" required) 
+          input(type="text" placeholder="Country" id="country" required) 
+          input(type="text" placeholder="Province" id="province")  
+          input(type="text" placeholder="Postal Code" id="zipcode") 
+          br
         button#signUpB(type='button' onclick='signUp()') Sign Up
         br
         p

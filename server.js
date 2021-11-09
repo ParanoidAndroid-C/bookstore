@@ -5,7 +5,8 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const app = express();
-
+const pg = require('pg');
+const db = require('./queries');
 
 app.use(session({
 	secret: 'seafoodisoverrated', //change this later
@@ -24,6 +25,8 @@ app.use(bodyParser.json());
 //routers
 let booksRouter = require("./routers/books-router");
 app.use("/", booksRouter);
+let checkoutRouter = require("./routers/checkout-router");
+app.use("/checkout", checkoutRouter);
 
 app.get("/", (req, res, next) => {
 	res.redirect('/books');
@@ -38,24 +41,35 @@ app.get("/login", (req, res, next) => {
 	res.end(content);
 });
 
-	
+app.post("/login", db.checkLogin);	
+/*
 app.post("/login", (req, res, next) => {
 
     if (req.session.loggedin) {
 		res.status(200).send("Already logged in");
 		return;
 	}
-    console.log(req.body)
 
-	let username = req.body.username;
+	let email = req.body.email;
 	let password = req.body.password;
     let owner = req.body.owner;
-    // console.log(owner);
+
+	let cipher = CryptoJS.AES.encrypt(password, key);
+	cipher = cipher.toString();
+	// console.log(cipher);
+
+	// let decipher = CryptoJS.AES.decrypt(cipher, key);
+	// decipher = decipher.toString(CryptoJS.enc.Utf8);
+	// console.log(decipher);
+
+	let userExists = true;
+
+	if (db.checkLogin(email, password))
 
     //check in the daatabase if we have a user with given credentials 
     // add code here
     // this is just a test version
-    let userExists = true;
+
 
     let result = {username: "mary", password:"whocares", ID: 1}
 
@@ -74,6 +88,7 @@ app.post("/login", (req, res, next) => {
     }
 
 });
+*/
 
 app.get("/logout", (req, res, next) => {
 	if (req.session.loggedin) {
@@ -95,3 +110,5 @@ app.get("/register", (req, res, next)=> {
 	res.setHeader("Content-Type", "text/html");
 	res.end(content);
 });
+
+app.post("/register", db.register);

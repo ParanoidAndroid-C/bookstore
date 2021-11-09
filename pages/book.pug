@@ -1,0 +1,38 @@
+html
+head
+  title #{book.Title}
+  link(rel='stylesheet' href='/stylesheets/book.css')
+  meta(charset="utf-8")
+header
+  ul#menu
+    li
+      a(href='../') Main Page
+main
+  #mainCard
+    h1#title #{book.Title}
+    br
+    - let img = book.Poster
+    img#poster(src=img)
+    #info
+      h3 Genre: #{book.Genre}
+      h3 Author: #{book.Author}
+      h3 Year of release: #{book.Year}
+      h3 Numebr of pages: #{book.pagecnt}
+      h3 Publisher: #{book.Publisher}
+      h3 Price: #{book.Price}
+    h3 Reviews
+    if (reviews.length == 0) 
+      p Oops, such empty... be the first to  make a review!
+    else 
+      each review in reviews
+        #reviewInfo
+          br
+          p Review by #{review.name}
+          p Score: #{review.score}/10
+          p #{review.reviewSummary}
+          br
+
+    br
+
+footer
+script(src='/public/book.js')

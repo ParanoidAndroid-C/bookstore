@@ -4,9 +4,10 @@ let router = express.Router();
 const path = require('path');
 const fs = require("fs");
 const pug = require('pug');
+const db = require('../queries')
 
-router.get("/", loadBooks);
-router.get("/books", loadBooks);
+router.get("/", db.getBooks);
+router.get("/books", db.getBooks);
 
 function auth(req, res,next) {
   if (!req.session.loggedin) {
@@ -22,17 +23,6 @@ function send404(res) {
   let content = pug.renderFile("error404.html");
   res.setHeader("Content-Type", "text/html");
   res.end(content);
-}
-
-
-function loadBooks(req, res) {
-    req.app.use("/public", express.static("./public"));
-    req.app.use("/stylesheets", express.static("stylesheets"));
-
-    let content = pug.renderFile("pages/books.pug");
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/html");
-    res.end(content);
 }
 
 
