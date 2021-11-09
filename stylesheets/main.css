@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+  }
+  .column {
+      float: left;
+      width: 350px;
+      pnumeric(2)adding: 0 10px;
+  }
+  
+  .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
+      padding: 30px;
+      height: 400px;
+      text-align: center;
+      background-color: lightpink;
+      color: white;
+      margin-bottom: 40px;
+  }
+  .card img{
+      width: 200px;
+      height: 350px;
+  }
+  @media screen and (max-width: 600px) {
+  .column {
+      width: 100%;
+      display: block;
+      margin-bottom: 20px;
+  }
+  }  
+  li a{
+      display: block;
+      background-color:black;
+      color: white;
+      text-align: center;
+      padding-left: 25px;
+      font-size: 20px;
+      text-decoration: none;
+  }
+  #menu {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color:black;
+    }
+  #search {
+      list-style-type: none;
+      margin-top: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color:grey;
+      align-content: center;
+    }
+    
+    li {
+      float: left;
+      display: inline;
+    }
+    .searchList {
+        margin-right: 5px;
+        margin-top: 10px;
+    }
+    #searchText {
+        margin-left: 10px;
+        margin-right: 20px;
+        margin-top: 5px;
+    }
+    .searchInput {
+      margin-top: 24px;
+      margin-right: 50px;
+      margin-bottom: 10px;
+    }
+    #searchButton {
+      margin-top: 22px;
+      margin-right: 50px;
+    }
+    button {
+      background-color: black;
+      color: white;
+      margin-left: 10px;
+    }
+    #title {
+        text-align: center;
+        background-color: black;
+        color: aliceblue;
+        margin-bottom: 0;
+    } 
