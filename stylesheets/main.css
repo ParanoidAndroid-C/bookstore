@@ -1,32 +1,23 @@
 body {
     margin: 0;
   }
-  .column {
-      float: left;
-      width: 350px;
-      pnumeric(2)adding: 0 10px;
-  }
-  
   .card {
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
       padding: 30px;
-      height: 400px;
+      height: 200px;
+      width: 200px;
       text-align: center;
       background-color: lightpink;
       color: white;
       margin-bottom: 40px;
+      margin-left: 30px;
+      display: inline-block;
   }
-  .card img{
-      width: 200px;
-      height: 350px;
-  }
-  @media screen and (max-width: 600px) {
   .column {
-      width: 100%;
-      display: block;
-      margin-bottom: 20px;
-  }
-  }  
+    float: left;
+    width: 350px;
+    padding: 0 10px;
+}
   li a{
       display: block;
       background-color:black;

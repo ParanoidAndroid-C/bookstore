@@ -23,7 +23,7 @@ const pool = new Pool({
  const getBooks = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
-    pool.query('SELECT * FROM test', (error, results) => {
+    pool.query('SELECT * FROM book WHERE average_rating > 4.0 LIMIT 20', (error, results) => {
       if (error) {
         throw error
       }
@@ -40,21 +40,24 @@ const pool = new Pool({
   const getBook = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
-    const id = parseInt(request.params.id);
+    const id = parseInt(req.params.bid);
 
-    pool.query(`SELECT * FROM books WHERE book_id = ${id}`, (error, results) => {
+    pool.query(`SELECT * FROM book WHERE book_id = '${id}'`, (error, results) => {
       if (error) {
         throw error
       }
       
       const book = results.rows[0];
-      pool.query(`SELECT * FROM book_author INNER JOIN author ON book_author.book_id = ${id} AND book_author.author_id == authors.author_id `, (err, res) => {
+      pool.query(`SELECT * FROM book_author, author WHERE book_author.book_id = '${id}' AND book_author.author_id = author.author_id `, (err, resu) => {
         if (error) {
           throw error
         }
       
         console.log(results.rows);
-        let content = pug.renderFile("pages/book.pug", {book: book, authors: res});
+        console.log(resu);
+        let auth  = resu.rows;
+
+        let content = pug.renderFile("pages/book.pug", {book: book, authors: auth});
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html");
         res.end(content);

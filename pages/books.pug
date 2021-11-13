@@ -29,5 +29,11 @@ html
             button#searchB Search
     body
         div#main
-        
-            
+        each book in books
+            -bid = book.book_id
+            .column
+            .card(onclick='showBook("'+bid+ '")')
+                p #{book.title}
+        br
+footer
+script(src='/public/book.js')

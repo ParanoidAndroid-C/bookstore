@@ -8,6 +8,7 @@ const db = require('../queries')
 
 router.get("/", db.getBooks);
 router.get("/books", db.getBooks);
+router.get("/book/:bid", db.getBook);
 
 function auth(req, res,next) {
   if (!req.session.loggedin) {
