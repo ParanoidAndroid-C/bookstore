@@ -14,24 +14,15 @@ main
     - let img = book.Poster
     img#poster(src=img)
     #info
-      h3 Genre: #{book.Genre}
-      h3 Author: #{book.Author}
-      h3 Year of release: #{book.Year}
-      h3 Numebr of pages: #{book.pagecnt}
-      h3 Publisher: #{book.Publisher}
-      h3 Price: #{book.Price}
-    h3 Reviews
-    if (reviews.length == 0) 
-      p Oops, such empty... be the first to  make a review!
-    else 
-      each review in reviews
-        #reviewInfo
-          br
-          p Review by #{review.name}
-          p Score: #{review.score}/10
-          p #{review.reviewSummary}
-          br
-
+      h3 Title: #{book.title}
+      h3 Authors:
+      each author in authors
+          p #{author.name}
+      br
+      h3 Year of release: #{book.release_date}
+      h3 Numebr of pages: #{book.page_cnt}
+      h3 Publisher: #{book.publisher_name}
+      h3 Price: #{book.price}
     br
 
 footer
