@@ -28,7 +28,7 @@ const pool = new Pool({
         throw error
       }
     
-      console.log(results.rows);
+      //console.log(results.rows);
       let content = pug.renderFile("pages/books.pug", {books: results.rows});
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/html");
@@ -53,8 +53,8 @@ const pool = new Pool({
           throw error
         }
       
-        console.log(results.rows);
-        console.log(resu);
+        //console.log(results.rows);
+        //console.log(resu);
         let auth  = resu.rows;
 
         let content = pug.renderFile("pages/book.pug", {book: book, authors: auth});
@@ -172,7 +172,7 @@ const removeBook = (req, res) => {
       }
 
     const address_id = results.rows[0].address_id;
-    console.log(address_id);
+    //console.log(address_id);
 
     pool.query(`insert into \"user\"(name, email, password, age, genre, address_id) values('${name}', '${email}', '${password}', ${age}, '${genre}', ${address_id}) RETURNING user_id`, (err, resu) => {
       if (err) {
@@ -189,11 +189,46 @@ const removeBook = (req, res) => {
     })
   }
 
+
+  const getAuthor = (req, res) => {
+    req.app.use("/public", express.static("./public"));
+    req.app.use("/stylesheets", express.static("stylesheets"));
+    const id = parseInt(req.params.aid);
+
+    pool.query(`SELECT * FROM author WHERE author_id = '${id}'`, (error, results) => {
+      if (error) {
+        throw error
+      }
+      
+      const author = results.rows[0];
+      pool.query(`SELECT * FROM book, book_author, author WHERE book_author.book_id = book.book_id  AND book_author.author_id = '${id}' AND book_author.author_id = author.author_id `, (err, resu) => {
+        if (error) {
+          throw error
+        }
+      
+        //console.log(results.rows);
+        //console.log(resu);
+
+        let books  = resu.rows;
+        //console.log(books);
+    
+
+        let content = pug.renderFile("pages/author.pug", {books: books, author: author});
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html");
+        res.end(content);
+  
+      })
+
+    })
+  }
+
   module.exports = {
       getBooks,
       getBook,
       addBook,
       removeBook,
       checkLogin,
-      register
+      register,
+      getAuthor
   }
