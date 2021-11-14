@@ -139,7 +139,10 @@ const removeBook = (req, res) => {
       }
       
       if (results.rows.length == 1) {
-        console.log(results.rows);
+        console.log(req.session)
+          req.session.loggedin = true;
+          req.session.username = results.rows.name;
+          req.session.cart = [];
         res.statusCode = 200;
         res.end();
       } else {
@@ -205,13 +208,8 @@ const removeBook = (req, res) => {
         if (error) {
           throw error
         }
-      
-        //console.log(results.rows);
-        //console.log(resu);
 
         let books  = resu.rows;
-        //console.log(books);
-    
 
         let content = pug.renderFile("pages/author.pug", {books: books, author: author});
         res.statusCode = 200;
@@ -223,6 +221,39 @@ const removeBook = (req, res) => {
     })
   }
 
+
+  const getCart = (req, res) => {
+    req.app.use("/public", express.static("./public"));
+    req.app.use("/stylesheets", express.static("stylesheets"));
+    let cart = req.session.cart;
+    console.log(cart);
+    let idList = "(";
+    // build list
+    for (let i = 0; i < cart.length; i++) {
+      idList += "'" + cart[i] + "'";
+      if (i != cart.length -1) {
+        idList += ","
+      }
+    }
+
+    idList += ")";
+    console.log(idList);
+
+    pool.query(`SELECT * FROM book WHERE book_id IN ${idList}`, (error, results) => {
+      if (error) {
+        throw error
+      }
+
+      console.log(results.rows);
+      let books = results.rows;
+    
+      let content = pug.renderFile("pages/cart.pug", {books: books});
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "text/html");
+      res.end(content);
+    })
+  }
+
   module.exports = {
       getBooks,
       getBook,
@@ -230,5 +261,6 @@ const removeBook = (req, res) => {
       removeBook,
       checkLogin,
       register,
-      getAuthor
+      getAuthor,
+      getCart
   }

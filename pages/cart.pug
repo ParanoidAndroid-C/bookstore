@@ -1,23 +1,19 @@
 html
 head
-  title #{author.name}
-  link(rel='stylesheet' href='/stylesheets/author.css')
+  link(rel='stylesheet' href='/stylesheets/cart.css')
   meta(charset="utf-8")
 header
   ul#menu
     li
       a(href='../') Main Page
 main
-    h1#title #{author.name}
-    #info
-        h3 Books:
-        each book in books
+    h3 Items:
+    each book in books
         -bid = book.book_id
         .column
         .card(onclick='showBook("'+bid+ '")')
             p #{book.title}
-        br
-        h3 Country: #{author.country}
+            p #{book.price}
     br
 
 footer

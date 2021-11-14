@@ -67,3 +67,22 @@ app.get("/register", (req, res, next)=> {
 });
 
 app.post("/register", db.register);
+
+app.post("/cart", (req, res, next) => {
+	console.log(req.session);
+	let book_id = req.body.book_id;
+	req.session.cart.push(book_id);
+	console.log("added successfuly");
+	res.statusCode = 201;
+	res.end();
+})
+
+
+app.get("/cart", db.getCart);
+
+// app.get("/cart", (req, res, next) => {
+// 	let content = pug.renderFile("pages/cart.pug", {items: req.session.cart});
+// 	res.statusCode = 200;
+// 	res.setHeader("Content-Type", "text/html");
+// 	res.end(content);
+// })
