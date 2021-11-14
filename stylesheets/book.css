@@ -1,14 +1,15 @@
 body {
     margin: 0;
+    background-color: azure;
   }
   .card {
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
       padding: 30px;
-      height: 200px;
+      height: 80px;
       width: 200px;
       text-align: center;
-      background-color: lightpink;
-      color: white;
+      background-color: antiquewhite;
+      color: black;
       margin-bottom: 40px;
       margin-left: 30px;
       display: inline-block;
