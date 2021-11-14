@@ -1,13 +1,10 @@
 const express = require('express');
 let router = express.Router();
 
-const path = require('path');
-const fs = require("fs");
 const pug = require('pug');
 const db = require('../queries')
 
-router.get("/", db.getBooks);
-router.get("/:bid", db.getBook);
+router.get("/:aid", db.getAuthor);
 
 function auth(req, res,next) {
   if (!req.session.loggedin) {

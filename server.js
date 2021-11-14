@@ -24,9 +24,11 @@ app.use(bodyParser.json());
 
 //routers
 let booksRouter = require("./routers/books-router");
-app.use("/", booksRouter);
+app.use("/books", booksRouter);
 let checkoutRouter = require("./routers/checkout-router");
 app.use("/checkout", checkoutRouter);
+let authorsRouter = require("./routers/authors-router");
+app.use("/authors", authorsRouter);
 
 app.get("/", (req, res, next) => {
 	res.redirect('/books');
@@ -42,53 +44,6 @@ app.get("/login", (req, res, next) => {
 });
 
 app.post("/login", db.checkLogin);	
-/*
-app.post("/login", (req, res, next) => {
-
-    if (req.session.loggedin) {
-		res.status(200).send("Already logged in");
-		return;
-	}
-
-	let email = req.body.email;
-	let password = req.body.password;
-    let owner = req.body.owner;
-
-	let cipher = CryptoJS.AES.encrypt(password, key);
-	cipher = cipher.toString();
-	// console.log(cipher);
-
-	// let decipher = CryptoJS.AES.decrypt(cipher, key);
-	// decipher = decipher.toString(CryptoJS.enc.Utf8);
-	// console.log(decipher);
-
-	let userExists = true;
-
-	if (db.checkLogin(email, password))
-
-    //check in the daatabase if we have a user with given credentials 
-    // add code here
-    // this is just a test version
-
-
-    let result = {username: "mary", password:"whocares", ID: 1}
-
-    if (userExists) {
-        req.session.curUser = result;
-        req.session[result.ID] = true;
-        req.session.loggedin = true;
-        req.session.username = username;
-        let content = pug.renderFile("pages/books.pug", {user: result});
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "text/html");
-        res.end(content);
-    } else {
-        console.log("user not found");
-        res.status(401).send("User not found");
-    }
-
-});
-*/
 
 app.get("/logout", (req, res, next) => {
 	if (req.session.loggedin) {
