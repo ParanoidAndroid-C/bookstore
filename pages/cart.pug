@@ -1,0 +1,25 @@
+html
+head
+  link(rel='stylesheet' href='/stylesheets/cart.css')
+  meta(charset="utf-8")
+header
+  ul#menu
+    li
+      a(href='../') Main Page
+main
+    h3 Items:
+    #items
+      each book in books
+          -bid = book.book_id
+          #item
+            .card(onclick='showBook("'+bid+ '")')
+                p #{book.title}
+                p price: $#{book.price}
+            button#remove(onclick='removeBook("'+bid+ '")') Remove From Cart
+            br
+          br
+    br
+    #total 
+      p something here
+footer
+script(src='/public/cart.js')

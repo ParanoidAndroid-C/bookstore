@@ -27,6 +27,8 @@ html
             input(type="text" placeholder="Enter ISBN" id="bookGenre")
         li#searchButton
             button#searchB Search
+        li#cartButton 
+            button#cartB My Cart
     body
         div#main
         each book in books
@@ -36,4 +38,4 @@ html
                 p #{book.title}
         br
 footer
-script(src='/public/book.js')
+script(src='/public/books.js')

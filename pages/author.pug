@@ -8,17 +8,16 @@ header
     li
       a(href='../') Main Page
 main
-  #mainCard
     h1#title #{author.name}
     #info
-      h3 Books:
-      each book in books
-        -bid = book.book_id
-        .column
-        .card(onclick='showBook("'+bid+ '")')
-            p #{book.title}
-      br
-      h3 Country: #{author.country}
+        h3 Books:
+        each book in books
+          -bid = book.book_id
+          .column
+          .card(onclick='showBook("'+bid+ '")')
+              p #{book.title}
+        br
+        h3 Country: #{author.country}
     br
 
 footer
