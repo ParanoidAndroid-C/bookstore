@@ -12,7 +12,8 @@ function addToCart(book_id){
   req.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 201) {
       console.log("All good. " + this.responseText);
-	  //document.getElementById('addToCart').setValue = 'ahaa';
+    } else if (this.readyState == 4 && this.status == 200) {
+      window.location.href = "../login";
     }
   }
 

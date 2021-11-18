@@ -8,13 +8,18 @@ header
       a(href='../') Main Page
 main
     h3 Items:
-    each book in books
-        -bid = book.book_id
-        .column
-        .card(onclick='showBook("'+bid+ '")')
-            p #{book.title}
-            p #{book.price}
+    #items
+      each book in books
+          -bid = book.book_id
+          #item
+            .card(onclick='showBook("'+bid+ '")')
+                p #{book.title}
+                p price: $#{book.price}
+            button#remove(onclick='removeBook("'+bid+ '")') Remove From Cart
+            br
+          br
     br
-
+    #total 
+      p something here
 footer
-script(src='/public/author.js')
+script(src='/public/cart.js')

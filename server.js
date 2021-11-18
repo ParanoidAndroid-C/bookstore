@@ -37,7 +37,6 @@ app.get("/", (req, res, next) => {
 // user login
 app.get("/login", (req, res, next) => {
 	let content = pug.renderFile("pages/login.pug");
-
 	res.statusCode = 200;
 	res.setHeader("Content-Type", "text/html");
 	res.end(content);
@@ -68,17 +67,21 @@ app.get("/register", (req, res, next)=> {
 
 app.post("/register", db.register);
 
-app.post("/cart", (req, res, next) => {
-	console.log(req.session);
-	let book_id = req.body.book_id;
-	req.session.cart.push(book_id);
-	console.log("added successfuly");
-	res.statusCode = 201;
-	res.end();
-})
+app.post("/cart", [auth, db.addToCart]);
 
+app.put("/cart", [auth, db.removeFromCart])
 
-app.get("/cart", db.getCart);
+app.get("/cart", [auth, db.getCart]);
+
+function auth(req, res,next) {
+	if (!req.session.loggedin) {
+	  res.redirect("/login");
+	  res.statusCode = 402;
+	  res.end();
+	} else {
+	next();
+	}
+  }
 
 // app.get("/cart", (req, res, next) => {
 // 	let content = pug.renderFile("pages/cart.pug", {items: req.session.cart});

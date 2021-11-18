@@ -12,10 +12,10 @@ main
     #info
         h3 Books:
         each book in books
-        -bid = book.book_id
-        .column
-        .card(onclick='showBook("'+bid+ '")')
-            p #{book.title}
+          -bid = book.book_id
+          .column
+          .card(onclick='showBook("'+bid+ '")')
+              p #{book.title}
         br
         h3 Country: #{author.country}
     br
