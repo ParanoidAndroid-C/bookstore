@@ -23,13 +23,16 @@ const pool = new Pool({
  const getBooks = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
+    let loggedin = req.session.loggedin;
+
     pool.query('SELECT * FROM book WHERE average_rating > 4.0 LIMIT 20', (error, results) => {
       if (error) {
         throw error
       }
     
+
       //console.log(results.rows);
-      let content = pug.renderFile("pages/books.pug", {books: results.rows});
+      let content = pug.renderFile("pages/books.pug", {books: results.rows, loggedin: loggedin});
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/html");
       res.end(content);

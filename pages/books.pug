@@ -29,6 +29,12 @@ html
             button#searchB Search
         li#cartButton 
             button#cartB My Cart
+        li#login
+            if !loggedin
+                button#login Log In
+            else
+                button#logout Log Out
+
     body
         div#main
         each book in books
