@@ -20,6 +20,8 @@ main
           br
     br
     #total 
-      p something here
+      h3 Your total is $#{total}
+      button#checkout(onclick='checkout()') checkout
+
 footer
 script(src='/public/cart.js')
