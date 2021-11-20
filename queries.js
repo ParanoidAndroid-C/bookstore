@@ -1,9 +1,9 @@
 const pug = require('pug');
 const express = require('express');
-const CryptoJS = require("crypto-js");
-let key = "PLACEBO";
+
 const Pool = require('pg').Pool;
-const e = require('express');
+
+
 const pool = new Pool({
         user: 'postgres',
         host: 'localhost',
@@ -142,8 +142,9 @@ const removeBook = (req, res) => {
       if (results.rows.length == 1) {
         console.log(req.session)
           req.session.loggedin = true;
-          req.session.username = results.rows.name;
+          req.session.username = results.rows[0].name;
           req.session.cart = [];
+          req.session.userID = results.rows[0].user_id;
         res.statusCode = 200;
         res.end();
       } else {
@@ -258,8 +259,13 @@ const removeBook = (req, res) => {
 
         console.log(results.rows);
         let books = results.rows;
-      
-        let content = pug.renderFile("pages/cart.pug", {books: books});
+        let total = 0;
+
+        for (let i = 0; i < books.length; i++) {
+          total += parseInt(books[i].price);
+        } 
+  
+        let content = pug.renderFile("pages/cart.pug", {books: books, total: total});
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html");
         res.end(content);
@@ -299,6 +305,8 @@ const removeFromCart = (req, res) => {
 
       console.log(results.rows);
       let books = results.rows;
+
+      console.log(total);
     
       let content = pug.renderFile("pages/cart.pug", {books: books});
       res.statusCode = 201;
@@ -312,6 +320,30 @@ const removeFromCart = (req, res) => {
 }
 
 
+const getCheckout = (req, res) => {
+  req.app.use("/public", express.static("./public"));
+  req.app.use("/stylesheets", express.static("stylesheets"));
+
+    const userID = parseInt(req.session.userID);
+    console.log(userID);
+
+    pool.query(`SELECT * FROM "user", address WHERE user_id = ${userID} AND address.address_id = "user".address_id`, (error, results) => {
+      if (error) {
+        throw error
+      }
+
+      console.log(results.rows);
+      let user = results.rows[0];
+
+      console.log(user);
+
+      let content = pug.renderFile("pages/checkout.pug", {user : user});
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "text/html");
+      res.end(content);
+    })
+}
+
   module.exports = {
       getBooks,
       getBook,
@@ -322,5 +354,6 @@ const removeFromCart = (req, res) => {
       getAuthor,
       getCart,
       removeFromCart,
-      addToCart
+      addToCart,
+      getCheckout
   }

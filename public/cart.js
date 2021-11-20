@@ -1,4 +1,5 @@
 const e = require("express");
+const { use } = require("../routers/books-router");
 
 function showBook(id) {
 	window.location.href = "/books/" + id;
@@ -20,4 +21,17 @@ function removeBook(id) {
     req.open("PUT", "http://localhost:3000/cart");
     req.setRequestHeader("Content-Type", "application/json");
     req.send(JSON.stringify(book));
+}
+
+function checkout() {
+    let req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            window.location.href = "../checkout";
+        } 
+    }
+
+    req.open("GET", "http://localhost:3000/checkout");
+    //req.setRequestHeader("Content-Type", "application/json");
+    req.send();
 }

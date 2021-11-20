@@ -5,8 +5,10 @@ const path = require('path');
 const fs = require("fs");
 const pug = require('pug');
 
+const db = require('../queries')
+
 //router.get("/", [auth, getCheckout]);
-router.get("/", getCheckout);
+router.get("/", [auth, db.getCheckout]);
 
 
 function auth(req, res,next) {
@@ -26,15 +28,15 @@ function send404(res) {
 }
 
 
-function getCheckout(req, res) {
-    req.app.use("/public", express.static("./public"));
-    req.app.use("/stylesheets", express.static("stylesheets"));
+// function getCheckout(req, res) {
+//     req.app.use("/public", express.static("./public"));
+//     req.app.use("/stylesheets", express.static("stylesheets"));
 
-    let content = pug.renderFile("pages/checkout.pug");
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/html");
-    res.end(content);
-}
+//     let content = pug.renderFile("pages/checkout.pug");
+//     res.statusCode = 200;
+//     res.setHeader("Content-Type", "text/html");
+//     res.end(content);
+// }
 
 
 module.exports = router;
