@@ -14,6 +14,9 @@ html
           input(type="text" placeholder="Contact Info" id="contactinfo" value=user.email)
         #checkout
           h3 Billing Information
+          input(type="checkbox" id="addressCheck" checked)
+          | Billing address is the same as the shipping address
+          br
           input(type="text" placeholder="Street Address" id="address" value=user.street)
           input(type="text" placeholder="Apartment #" id="apt" value=user.apt_num)
           br

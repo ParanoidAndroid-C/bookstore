@@ -188,7 +188,10 @@ const removeBook = (req, res) => {
           res.end();
           //throw err
       } else {
-      
+          req.session.loggedin = true;
+          req.session.userID = resu.rows[0].user_id;
+          req.session.username = name;
+          req.session.cart = [];
           console.log(resu);
           res.statusCode = 201;
           res.end();
@@ -308,8 +311,6 @@ const removeFromCart = (req, res) => {
 
       console.log(results.rows);
       let books = results.rows;
-
-      console.log(total);
     
       let content = pug.renderFile("pages/cart.pug", {books: books});
       res.statusCode = 201;
