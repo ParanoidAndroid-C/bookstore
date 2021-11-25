@@ -19,3 +19,13 @@ function showBook(id) {
     console.log("ess")
 	window.location.href = "/books/" + id;
 }
+
+let logIn = document.getElementById("login");
+logIn.onclick = () => {
+    window.location.href = "../login";
+}
+
+let logout = document.getElementById("logout");
+logout.onclick = () => {
+    window.location.href = "../logout";
+}

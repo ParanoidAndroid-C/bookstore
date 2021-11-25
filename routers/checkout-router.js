@@ -9,6 +9,7 @@ const db = require('../queries')
 
 //router.get("/", [auth, getCheckout]);
 router.get("/", [auth, db.getCheckout]);
+router.post("/", [auth, db.postCheckout])
 
 
 function auth(req, res,next) {

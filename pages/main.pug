@@ -30,18 +30,16 @@ html
         li#cartButton 
             button#cartB My Cart
         li#login
-            if !loggedin
-                button#login Log In
-            else
-                button#logout Log Out
+            button#logout Log Out
 
     body
-        div#main
-        each book in books
-            -bid = book.book_id
-            .column
-            .card(onclick='showBook("'+bid+ '")')
-                p #{book.title}
-        br
+        div#operations
+            button#addBook(onclick='addBook()') Add Book 
+            br
+            button#removeBook(onclick='removeBook()') Remove Book 
+            br
+            button#wkRprt(onclick='report()') Weekly Report 
+            br
+            button#publsihers(onclick='publishers()') Publishers Info
 footer
-script(src='/public/books.js')
+script(src='/public/main.js')
