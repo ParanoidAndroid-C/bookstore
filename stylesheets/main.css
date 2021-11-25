@@ -80,3 +80,16 @@ body {
         color: aliceblue;
         margin-bottom: 0;
     } 
+    #operations {
+      text-align: center;
+    }
+    #addBook{
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+    #removeBook{
+      margin-bottom: 50px;
+    }
+    #wkRprt{
+      margin-bottom: 50px;
+    }

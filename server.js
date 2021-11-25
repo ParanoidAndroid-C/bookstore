@@ -48,6 +48,7 @@ app.get("/logout", (req, res, next) => {
 	if (req.session.loggedin) {
 		req.session.loggedin = false;
 		req.session.username = undefined;
+		req.session.owner = false;
 		let content = pug.renderFile("pages/login.pug");
 		res.statusCode = 200;
 		res.setHeader("Content-Type", "text/html");
@@ -72,6 +73,10 @@ app.post("/cart", [auth, db.addToCart]);
 app.put("/cart", [auth, db.removeFromCart])
 
 app.get("/cart", [auth, db.getCart]);
+
+app.get("/main", [auth, db.getMain]);
+app.get("/booksForm", [auth, db.getBookForm])
+app.post("/booksForm", [auth, db.addBook])
 
 function auth(req, res,next) {
 	if (!req.session.loggedin) {

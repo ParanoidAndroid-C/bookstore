@@ -1,0 +1,45 @@
+html
+    head
+        title Welcome
+        link(href='/stylesheets/main.css' rel='stylesheet')      
+        meta(charset="utf-8")
+
+    header 
+      h1#title SAMI BOOKS
+      ul#search
+        li#searchText
+            h4 Search Book
+        li(class="searchList") 
+            p Title: 
+        li(class="searchInput") 
+            input(type="text" placeholder="Enter Title" id="bookTitle")
+        li(class="searchList") 
+            p Author: 
+        li(class="searchInput") 
+            input(type="text" placeholder="Enter Author" id="bookAuthor")
+        li(class="searchList") 
+            p Genre: 
+        li(class="searchInput") 
+            input(type="text" placeholder="Enter Genre" id="bookGenre")
+        li(class="searchList") 
+            p ISBN: 
+        li(class="searchInput") 
+            input(type="text" placeholder="Enter ISBN" id="bookGenre")
+        li#searchButton
+            button#searchB Search
+        li#cartButton 
+            button#cartB My Cart
+        li#login
+            button#logout Log Out
+
+    body
+        div#operations
+            button#addBook(onclick='addBook()') Add Book 
+            br
+            button#removeBook(onclick='removeBook()') Remove Book 
+            br
+            button#wkRprt(onclick='report()') Weekly Report 
+            br
+            button#publsihers(onclick='publishers()') Publishers Info
+footer
+script(src='/public/main.js')

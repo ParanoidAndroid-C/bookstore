@@ -40,6 +40,22 @@ const pool = new Pool({
     })
   }
 
+  const getMain = (req, res) => {
+    let content = pug.renderFile("pages/main.pug");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+  }
+
+  
+  const getBookForm = (req, res) => {
+    let content = pug.renderFile("pages/bookForm.pug");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+  }
+
+
   const getBook = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
@@ -59,7 +75,6 @@ const pool = new Pool({
         //console.log(results.rows);
         //console.log(resu);
         let auth  = resu.rows;
-console.log("ageeeeeee")
 console.log(book)
         let content = pug.renderFile("pages/book.pug", {book: book, authors: auth});
         res.statusCode = 200;
@@ -72,40 +87,61 @@ console.log(book)
   }
 
   const addBook = (req, res) => {
-   try {
-    let body = "";
-    req.on('data', (chunk) => {
-      body += chunk;
-    })
-    req.on('end', () => {
-        const newBook = JSON.parse(body);
 
-        const title = newBook.title;
-        const genre = newBook.genre;
-        const author_id = newBook.author_id;
-        const page_cnt = newBook.page_cnt;
-        const price = newBook.price;
-        const release_date = newBook.release_date;
+        const title = req.body.title;
+        const page_cnt = parseInt(req.body.page_cnt);
+        const price = parseFloat(req.body.price);
+        const release_date = req.body.release_date;
+        const ISBN = req.body.ISBN;
+        const language = req.body.language;
+        const publsiher = req.body.publsiher;
+        let authors = req.body.authors;
+        let namesList;
+          namesList = "(";
+          // build list
+          for (let i = 0; i < authors.length; i++) {
+            namesList += "'" + authors[i] + "'";
+            if (i != authors.length -1) {
+              namesList += ","
+            }
+          }
+    
+          namesList += ")";
+          console.log(namesList);
         
-        pool.query(`insert into books(title, genre, author_id, page_cnt, price, release_date) values(${title}, ${genre}, ${author_id}, ${page_cnt}, ${price}, ${release_date})`, (error, results) => {
+        pool.query(`insert into book(book_id, title, language_code, page_cnt, price, release_date, publisher_name) values('${ISBN}', '${title}', '${language}', ${page_cnt}, ${price}, '${release_date}', '${publsiher}')`, (error, results) => {
         if (error) {
+            res.statusCode = 400;
             throw error
         }
-        
-        // book added successfully
-        console.log(results.rows);
-       // let content = pug.renderFile("pages/book.pug", {book: results.rows});
-        res.statusCode = 200;
-        res.setHeader("Content-Type", "text/html");
-       // res.end(content);
+
+        pool.query(`SELECT * FROM author WHERE author.name IN ${namesList} `, (err, resu) => {
+          if (err) {
+              res.statusCode = 400;
+              throw error
+          
+            }
+
+            for (let i = 0; i < resu.rows.length; i++) {
+              pool.query(`insert into book_author(book_id, author_id) values(${ISBN}, ${resu.rows[i].author_id} )`, (err, r) => {
+                if (err) {
+                    res.statusCode = 401;
+                    throw err
+                  }
+                })
+            }
+
+              // book added successfully
+              console.log(results.rows);
+              let content = pug.renderFile("pages/main.pug");
+              res.statusCode = 201;
+              res.setHeader("Content-Type", "text/html");
+              res.end(content);
 
         })
-     })
-    } catch (err) {
-        console.log(err);
-        send404(res);
-        return;
-    }
+        
+        })
+        
 }
 
 
@@ -133,11 +169,14 @@ const removeBook = (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     let owner = req.body.owner;
-  
-    // let cipher = CryptoJS.AES.encrypt(password, key);
-    // password = cipher.toString();
+    let tablename = "\"user\"";
 
-    pool.query(`SELECT * FROM \"user\" WHERE email = '${email}' AND password = '${password}'`, (error, results) => {
+    if (owner) {
+      tablename = "owner";
+    } 
+
+
+    pool.query(`SELECT * FROM ${tablename} WHERE email = '${email}' AND password = '${password}'`, (error, results) => {
       if (error) {
         throw error
       }
@@ -147,6 +186,7 @@ const removeBook = (req, res) => {
           req.session.loggedin = true;
           req.session.username = results.rows[0].name;
           req.session.cart = [];
+          req.session.owner = true;
           req.session.userID = results.rows[0].user_id;
         res.statusCode = 200;
         res.end();
@@ -162,8 +202,6 @@ const removeBook = (req, res) => {
   
     const name = req.body.name;
     let password = req.body.password;
-    // let cipher = CryptoJS.AES.encrypt(password, key);
-    // password = cipher.toString();
     const email = req.body.email;
     const age = req.body.age;
     const genre = req.body.genre;
@@ -348,6 +386,45 @@ const getCheckout = (req, res) => {
     })
 }
 
+
+const postCheckout = (req, res) => {
+  req.app.use("/public", express.static("./public"));
+  req.app.use("/stylesheets", express.static("stylesheets"));
+
+  let checked = req.body.checked;
+  if (!checked) {
+    // create new address
+    const address = req.body.address;
+    const apt = req.body.apt;
+    const city = req.body.city;
+    const country = req.body.country;
+    const province = req.body.province;
+    const zipcode = req.body.zipcode;
+
+    pool.query(`insert into address(street, apt_num, city, province, country, zipcode) values('${address}', '${apt}', '${city}', '${province}', '${country}', '${zipcode}') RETURNING address_id`, (error, results) => {
+      if (error) {
+          throw error
+      }
+      const address_id = results.rows[0].address_id;
+  
+      pool.query(`insert into orders() values() RETURNING user_id`, (err, resu) => {
+        if (err) {
+            throw err
+        } else {
+          let content = pug.renderFile("pages/checkout.pug", {user : user});
+          res.statusCode = 201;
+          res.setHeader("Content-Type", "text/html");
+          res.end(content);
+
+        }
+        })
+    })
+  } else {
+    // get user address id
+    // add to orders table
+}
+}
+
   module.exports = {
       getBooks,
       getBook,
@@ -359,5 +436,8 @@ const getCheckout = (req, res) => {
       getCart,
       removeFromCart,
       addToCart,
-      getCheckout
+      getCheckout,
+      postCheckout,
+      getMain,
+      getBookForm
   }
