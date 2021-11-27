@@ -25,20 +25,36 @@ const pool = new Pool({
     req.app.use("/stylesheets", express.static("stylesheets"));
     let loggedin = req.session.loggedin;
 
-    pool.query('SELECT * FROM book WHERE average_rating > 4.0 LIMIT 20', (error, results) => {
-      if (error) {
-        throw error
-      }
-    
+    if (req.query.title || req.query.author){
+      pool.query(`SELECT * FROM book WHERE title LIKE '%${req.query.title}%' LIMIT 20`, (error, results) => {
+        if (error) {
+          throw error
+        }
+        //console.log(results.rows);
+        let content = pug.renderFile("pages/books.pug", { books: results.rows, loggedin: loggedin });
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html");
+        res.end(content);
+      })
+    }else{
 
-      //console.log(results.rows);
-      let content = pug.renderFile("pages/books.pug", {books: results.rows, loggedin: loggedin});
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/html");
-      res.end(content);
+      pool.query('SELECT * FROM book WHERE average_rating > 4.0 LIMIT 20', (error, results) => {
+        if (error) {
+          throw error
+        }
+      
 
-    })
+        //console.log(results.rows);
+        let content = pug.renderFile("pages/books.pug", {books: results.rows, loggedin: loggedin});
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html");
+        res.end(content);
+
+      })
+    }
   }
+
+
 
   const getMain = (req, res) => {
     let content = pug.renderFile("pages/main.pug");
@@ -428,6 +444,7 @@ const postCheckout = (req, res) => {
   module.exports = {
       getBooks,
       getBook,
+      searchBooks,
       addBook,
       removeBook,
       checkLogin,
