@@ -23,7 +23,8 @@ main
       h3 Year of release: #{book.release_date}
       h3 Numebr of pages: #{book.page_cnt}
       h3 Publisher: #{book.publisher_name}
-      h3 Price: #{book.price}
+      h3 Price: #{book.price_store}
+      h3 Genre: #{book.genre}
     br
     button#addToCart(onclick='addToCart("'+book.book_id+ '")')  Add To Cart
 

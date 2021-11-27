@@ -24,12 +24,28 @@ const pool = new Pool({
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
     let loggedin = req.session.loggedin;
-
-    if (req.query.title || req.query.author){
-      pool.query(`SELECT * FROM book WHERE title LIKE '%${req.query.title}%' LIMIT 20`, (error, results) => {
+  console.log(req.query)
+    if (req.query.title || req.query.author || req.query.genre || req.query.isbn){
+      let title = req.query.title == '' ? "UNDEFINED" : req.query.title;
+      let genre = req.query.genre == '' ? "UNDEFINED" : req.query.genre;
+      let author = req.query.author == '' ? "UNDEFINED" : req.query.author;
+      let isbn = req.query.isbn == '' ? "UNDEFINED" : req.query.isbn;
+      console.log(title)
+      console.log(author)
+      console.log(isbn)
+      console.log(genre)
+      pool.query(`SELECT DISTINCt(book_id, title) FROM book natural join book_author, author WHERE title LIKE '%${title}%' OR author.name LIKE '%${author}%' OR genre = '${genre}' OR book_id = '${isbn}' LIMIT 20`, (error, results) => {
         if (error) {
           throw error
         }
+        
+        for (let i = 0; i < results.rows.length; i++) {
+          let info = results.rows[i].row;
+          info = info.substring(1, info.length - 1);
+          info = info.split(",");
+          results.rows[i] = {book_id: info[0], title : info[1]}
+        }
+        console.log(results.rows)
         //console.log(results.rows);
         let content = pug.renderFile("pages/books.pug", { books: results.rows, loggedin: loggedin });
         res.statusCode = 200;
@@ -71,6 +87,13 @@ const pool = new Pool({
     res.end(content);
   }
 
+  const getPublisherForm = (req, res) => {
+    let content = pug.renderFile("pages/publisherForm.pug");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+  }
+
 
   const getBook = (req, res) => {
     req.app.use("/public", express.static("./public"));
@@ -102,11 +125,44 @@ console.log(book)
     })
   }
 
+  const addPublisher = (req, res) => {
+    const name = req.body.name;
+    const address = req.body.address;
+    const apt = req.body.apt;
+    const city = req.body.city;
+    const country = req.body.country;
+    const province = req.body.province;
+    const zipcode = req.body.zipcode;
+    const email = req.body.email;
+    const banking_acc = req.body.banking_acc;
+    const phone_number = req.body.phone_number;
+
+    pool.query(`insert into address(street, apt_num, city, province, country, zipcode) values('${address}', '${apt}', '${city}', '${province}', '${country}', '${zipcode}') RETURNING address_id`, (error, results) => {
+      if (error) {
+          throw error
+      }
+      
+      let address_id = results.rows[0].address_id;
+
+      pool.query(`insert into publisher(publisher_name, address_id, email, banking_acc, phone_number) values('${name}', '${address_id}', '${email}', '${banking_acc}', '${phone_number}')`, (error, result) => {
+        if (error) {
+          throw error
+        }
+        let content = pug.renderFile("pages/main.pug");
+        res.statusCode = 201;
+        res.setHeader("Content-Type", "text/html");
+        res.end(content);
+      })
+
+    })
+
+  }
+
   const addBook = (req, res) => {
 
         const title = req.body.title;
         const page_cnt = parseInt(req.body.page_cnt);
-        const price = parseFloat(req.body.price);
+        const price_store = parseFloat(req.body.price_store);
         const release_date = req.body.release_date;
         const ISBN = req.body.ISBN;
         const language = req.body.language;
@@ -124,8 +180,8 @@ console.log(book)
     
           namesList += ")";
           console.log(namesList);
-        
-        pool.query(`insert into book(book_id, title, language_code, page_cnt, price, release_date, publisher_name) values('${ISBN}', '${title}', '${language}', ${page_cnt}, ${price}, '${release_date}', '${publsiher}')`, (error, results) => {
+
+        pool.query(`insert into book(book_id, title, language_code, page_cnt, price_store, release_date, publisher_name) values('${ISBN}', '${title}', '${language}', ${page_cnt}, ${price_store}, '${release_date}', '${publsiher}')`, (error, results) => {
         if (error) {
             res.statusCode = 400;
             throw error
@@ -162,22 +218,21 @@ console.log(book)
 
 
 const removeBook = (req, res) => {
-    const id = parseInt(request.params.id);
+  let isbn = req.body.isbn;
 
-    pool.query(`DELETE FROM books WHERE book_id = ${id}`, (error, results) => {
-      if (error) {
-        throw error
-      }
-    
-      // render book removed successfully
-    //   let content = pug.renderFile("pages/book.pug", {book: results.rows});
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "text/html");
-    //   res.end(content);
-
-    })
-  }
+  pool.query(`DELETE FROM book WHERE book_id = '${isbn}'`, (error, results) => {
+    if (error) {
+      throw error
+    }
   
+    // render book removed successfully
+    let content = pug.renderFile("pages/main.pug");
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+
+  })
+}  
   const checkLogin = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
@@ -203,7 +258,9 @@ const removeBook = (req, res) => {
           req.session.username = results.rows[0].name;
           req.session.cart = [];
           req.session.owner = true;
+          req.session.total = 0;
           req.session.userID = results.rows[0].user_id;
+          req.session.address_id = results.rows[0].address_id;
         res.statusCode = 200;
         res.end();
       } else {
@@ -322,9 +379,10 @@ const removeBook = (req, res) => {
         let total = 0;
 
         for (let i = 0; i < books.length; i++) {
-          total += parseInt(books[i].price);
+          total += parseFloat(books[i].price_store);
         } 
   
+        req.session.total = total;
         let content = pug.renderFile("pages/cart.pug", {books: books, total: total});
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html");
@@ -407,7 +465,14 @@ const postCheckout = (req, res) => {
   req.app.use("/public", express.static("./public"));
   req.app.use("/stylesheets", express.static("stylesheets"));
 
+  const billing_address = req.session.address_id;
+  let address_id = billing_address;
+  const today = new Date().toISOString().slice(0, 10);
+  let taxCode = "ON"
+  const total = req.session.total;
+
   let checked = req.body.checked;
+  // get user address id
   if (!checked) {
     // create new address
     const address = req.body.address;
@@ -421,30 +486,100 @@ const postCheckout = (req, res) => {
       if (error) {
           throw error
       }
-      const address_id = results.rows[0].address_id;
+      
+      address_id = results.rows[0].address_id;
   
-      pool.query(`insert into orders() values() RETURNING user_id`, (err, resu) => {
+      pool.query(`insert into orders(shipping_address, billing_address, order_date, total, tax_code) values(${address_id}, ${billing_address}, '${today}', ${total}, '${taxCode}') RETURNING order_id`, (err, resu) => {
         if (err) {
             throw err
         } else {
-          let content = pug.renderFile("pages/checkout.pug", {user : user});
+          updateOrderBooksTable(resu.rows[0].order_id, req.session.cart)
+          let user_id = req.session.userID;
+          updateTracking(resu.rows[0].order_id, address_id, user_id)
+          req.session.cart = [];
           res.statusCode = 201;
           res.setHeader("Content-Type", "text/html");
-          res.end(content);
-
+          res.end();
         }
         })
     })
   } else {
-    // get user address id
-    // add to orders table
+
+    pool.query(`insert into orders(shipping_address, billing_address, order_date, total, tax_code) values(${address_id}, ${billing_address}, '${today}', ${total}, '${taxCode}') RETURNING order_id`, (err, resu) => {
+      if (err) {
+          throw err
+      } else {
+        updateOrderBooksTable(resu.rows[0].order_id, req.session.cart)
+        let user_id = req.session.userID;
+        updateTracking(resu.rows[0].order_id, address_id, user_id)
+        req.session.cart = [];
+        res.statusCode = 201;
+        res.setHeader("Content-Type", "text/html");
+        res.end();
+      }
+      })
+  }
 }
+
+
+function updateOrderBooksTable (order_id, books){
+  for (let i = 0; i < books.length; i++) {
+    pool.query(`insert into order_book(order_id, book_id) values(${order_id}, '${books[i]}')`, (err, resu) => {
+      if (err) {
+          throw err
+      }
+      updateBookCnt(books[i]);
+      })
+  }
+}
+
+function updateTracking(order_id, address_id, user_id){
+  const today = new Date().toISOString().slice(0, 10);
+  const defaultLocation = "Ottawa, Ontario"
+  
+  pool.query(`insert into tracking(tracking_id, updated_at, location, destination, user_id) values(${order_id}, '${today}', '${defaultLocation}', ${address_id}, ${user_id})`, (err, resu) => {
+    if (err) {
+        throw err
+    }
+    })
+}
+
+function updateBookCnt(book_id) {
+  pool.query(`update book set book_cnt = book_cnt - 1 RETURNING book_cnt`, (err, resu) => {
+    if (err) {
+        throw err
+    }
+
+    let book_cnt = parseInt(resu.rows[0].book_cnt)
+    if (book_cnt < 10) {
+      orderBooks(book_id);
+    }
+    })
+}
+
+function orderBooks(book_id) {
+  pool.query(`update book set book_cnt = 15 RETURNING book_cnt, price_org`, (err, resu) => {
+    if (err) {
+        throw err
+    }
+
+    const book_price = parseFloat(resu.rows[0].price_org);
+
+    pool.query(`update owner set total_spent = total_spent + 6 * ${book_price}`, (errors, resu) => {
+      if (errors) {
+          throw errors
+      }
+
+  
+      })
+
+    })
 }
 
   module.exports = {
       getBooks,
       getBook,
-      searchBooks,
+      //searchBooks,
       addBook,
       removeBook,
       checkLogin,
@@ -456,5 +591,7 @@ const postCheckout = (req, res) => {
       getCheckout,
       postCheckout,
       getMain,
-      getBookForm
+     getBookForm,
+      addPublisher,
+      getPublisherForm
   }

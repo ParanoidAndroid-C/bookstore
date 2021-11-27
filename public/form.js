@@ -2,7 +2,7 @@ function submit(){
     const ISBN = document.getElementById("ISBN").value; 
     const title = document.getElementById("title").value;
     const page_cnt = document.getElementById("pagecnt").value;
-    const price = document.getElementById("price").value; 
+    const price_store = document.getElementById("price").value; 
     const release_date = document.getElementById("date").value; 
     const language = document.getElementById("lang").value; 
     const publsiher = document.getElementById("publisher").value;
@@ -10,7 +10,7 @@ function submit(){
 
     authors = authors.split(", ");
 
-    const book = {ISBN:ISBN, title:title, page_cnt:page_cnt, price:price, release_date:release_date, language:language, publsiher:publsiher, authors: authors}
+    const book = {ISBN:ISBN, title:title, page_cnt:page_cnt, price_store:price_store, release_date:release_date, language:language, publsiher:publsiher, authors: authors}
 
     let req = new XMLHttpRequest();
     req.onreadystatechange = function () {

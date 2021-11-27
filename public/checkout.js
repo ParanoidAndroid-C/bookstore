@@ -19,6 +19,7 @@ function checkout() {
     req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 201) {
             window.location.href = "/books";
+            alert("Your order was placed successfully!");
         } 
     }
 

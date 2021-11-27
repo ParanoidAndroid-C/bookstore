@@ -17,11 +17,10 @@ cartButton.onclick = () => {
 
 let searchButton = document.getElementById("searchB")
 searchButton.onclick = () => {
-    console.log("qqqqqwwwwwwwwww")
     let title = document.getElementById('bookTitle').value;
     let author = document.getElementById('bookAuthor').value;
     let genre = document.getElementById('bookGenre').value;
-    let isbn = 0 //document.getElementById('bookISBN').value;
+    let isbn = document.getElementById('bookISBN').value;
     let req = new XMLHttpRequest();
     req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {

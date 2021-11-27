@@ -74,9 +74,12 @@ app.put("/cart", [auth, db.removeFromCart])
 
 app.get("/cart", [auth, db.getCart]);
 
+app.put("/main",[auth, db.removeBook]);
 app.get("/main", [auth, db.getMain]);
 app.get("/booksForm", [auth, db.getBookForm])
 app.post("/booksForm", [auth, db.addBook])
+app.post("/publisherForm", [auth, db.addPublisher])
+app.get("/publisherForm", [auth, db.getPublisherForm])
 
 function auth(req, res,next) {
 	if (!req.session.loggedin) {
