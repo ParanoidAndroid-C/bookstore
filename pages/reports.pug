@@ -1,0 +1,35 @@
+
+html
+head
+  title Reports
+  link(rel='stylesheet' href='/stylesheets/reports.css')
+  meta(charset="utf-8")
+main  
+    h2 Orders per genre
+    br
+    each sale in sales_genre
+        .column
+        .card
+            h4 #{sale.genre}
+            h4 total sold: #{sale.count}
+            h4 total money earned: #{sale.sum}
+    br
+    br
+    h2 Orders per author
+    br
+    each sale in sales_author
+        .column
+        .card
+            h3 #{sale.name}
+            h4 total sold: #{sale.count}
+            h4 total money earned: #{sale.sum}
+    br 
+    br
+    h2 Orders per publisher
+    br
+    each sale in sales_publisher
+        .column
+        .card 
+            h3 #{sale.publisher_name}
+            h4 total sold: #{sale.count}
+            h4 total money earned: #{sale.sum}

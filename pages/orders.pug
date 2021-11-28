@@ -1,0 +1,24 @@
+html
+head
+  title #{Orders}
+  link(rel='stylesheet' href='/stylesheets/author.css')
+  meta(charset="utf-8")
+header
+  ul#menu
+    li
+      a(href='../') Main Page
+main
+    h1#title #{Your Orders}
+    #info
+        each order in orders
+          -oid = order.order_id
+          -date = order.order_date
+          .column
+          .card(onclick='showOrder("'+bid+ '")')
+            h3 #{oid}
+            p #{date}
+        br
+    br
+
+footer
+script(src='/public/orders.js')

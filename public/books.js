@@ -34,6 +34,20 @@ searchButton.onclick = () => {
 
 }
 
+let searchTrackButton = document.getElementById("searchTrackB")
+searchTrackButton.onclick = () => {
+    let oid = document.getElementById('tracking_id').value;
+    let req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("All good. " + this.responseText);
+            window.location.href = "/tracking/" + oid;
+        }
+    }
+
+    req.open("GET", "http://localhost:3000/tracking/" + oid);
+    req.send();
+}
 
 function showBook(id) {
     console.log("ess")

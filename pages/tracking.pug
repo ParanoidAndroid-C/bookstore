@@ -1,0 +1,15 @@
+html
+head
+  title Tracking
+  link(rel='stylesheet' href='/stylesheets/author.css')
+  meta(charset="utf-8")
+header
+  ul#menu
+    li
+      a(href='../') Main Page
+main
+    h1#title Order##{tracking.tracking_id}
+    h3 Location #{tracking.location}, #{tracking.country}
+    h3 Updated at #{tracking.updated_at}    
+
+footer

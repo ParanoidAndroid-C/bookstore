@@ -74,12 +74,16 @@ app.put("/cart", [auth, db.removeFromCart])
 
 app.get("/cart", [auth, db.getCart]);
 
+app.get("/tracking/:oid", [auth, db.trackOrder]);
+
 app.put("/main",[auth, db.removeBook]);
 app.get("/main", [auth, db.getMain]);
 app.get("/booksForm", [auth, db.getBookForm])
 app.post("/booksForm", [auth, db.addBook])
 app.post("/publisherForm", [auth, db.addPublisher])
 app.get("/publisherForm", [auth, db.getPublisherForm])
+app.get("/reports", [auth, db.getReports])
+
 
 function auth(req, res,next) {
 	if (!req.session.loggedin) {

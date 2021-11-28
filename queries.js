@@ -3,6 +3,7 @@ const express = require('express');
 
 const Pool = require('pg').Pool;
 
+const genres = ['sci-fi', 'romance', 'mystery', 'detecrive', 'classics', 'biography', 'history', 'horror']
 
 const pool = new Pool({
         user: 'postgres',
@@ -81,10 +82,16 @@ const pool = new Pool({
 
   
   const getBookForm = (req, res) => {
-    let content = pug.renderFile("pages/bookForm.pug");
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/html");
-    res.end(content);
+    pool.query(`SELECT * FROM publisher`, (error, results) => {
+      if (error) {
+        throw error
+      }
+      
+      let content = pug.renderFile("pages/bookForm.pug", {publishers: results.rows, genres: genres});
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "text/html");
+      res.end(content);
+    })
   }
 
   const getPublisherForm = (req, res) => {
@@ -167,6 +174,9 @@ console.log(book)
         const ISBN = req.body.ISBN;
         const language = req.body.language;
         const publsiher = req.body.publsiher;
+        const genre = req.body.genre;
+        const price_org = parseFloat(req.body.price_org);
+        const book_cnt = parseInt(req.body.book_cnt);
         let authors = req.body.authors;
         let namesList;
           namesList = "(";
@@ -181,7 +191,7 @@ console.log(book)
           namesList += ")";
           console.log(namesList);
 
-        pool.query(`insert into book(book_id, title, language_code, page_cnt, price_store, release_date, publisher_name) values('${ISBN}', '${title}', '${language}', ${page_cnt}, ${price_store}, '${release_date}', '${publsiher}')`, (error, results) => {
+        pool.query(`insert into book(book_id, title, language_code, page_cnt, price_store, release_date, publisher_name, price_org, genre, book_cnt) values('${ISBN}', '${title}', '${language}', ${page_cnt}, ${price_store}, '${release_date}', '${publsiher}', ${price_org}, '${genre}', '${book_cnt}')`, (error, results) => {
         if (error) {
             res.statusCode = 400;
             throw error
@@ -203,17 +213,26 @@ console.log(book)
                 })
             }
 
+             let total_spent = price_org * book_cnt;
+
               // book added successfully
               console.log(results.rows);
+              updateTotalSpent(total_spent);
               let content = pug.renderFile("pages/main.pug");
               res.statusCode = 201;
               res.setHeader("Content-Type", "text/html");
               res.end(content);
+        })  
+      })       
+}
 
-        })
-        
-        })
-        
+function updateTotalSpent(total_spent) {
+  pool.query(`update owner set total_spent = total_spent + ${total_spent}`, (errors, resu) => {
+    if (errors) {
+        throw errors
+    }
+
+    })
 }
 
 
@@ -470,6 +489,7 @@ const postCheckout = (req, res) => {
   const today = new Date().toISOString().slice(0, 10);
   let taxCode = "ON"
   const total = req.session.total;
+  const user_id = req.session.userID;
 
   let checked = req.body.checked;
   // get user address id
@@ -489,36 +509,58 @@ const postCheckout = (req, res) => {
       
       address_id = results.rows[0].address_id;
   
-      pool.query(`insert into orders(shipping_address, billing_address, order_date, total, tax_code) values(${address_id}, ${billing_address}, '${today}', ${total}, '${taxCode}') RETURNING order_id`, (err, resu) => {
+      pool.query(`insert into orders(shipping_address, billing_address, order_date, total, tax_code, user_id) values(${address_id}, ${billing_address}, '${today}', ${total}, '${taxCode}', ${user_id}) RETURNING order_id`, (err, resu) => {
         if (err) {
             throw err
         } else {
           updateOrderBooksTable(resu.rows[0].order_id, req.session.cart)
-          let user_id = req.session.userID;
-          updateTracking(resu.rows[0].order_id, address_id, user_id)
+          updateTracking(resu.rows[0].order_id)
           req.session.cart = [];
           res.statusCode = 201;
-          res.setHeader("Content-Type", "text/html");
+          res.setHeader("Content-Type", "application/json");
+          const order_id = resu.rows[0].order_id;
+          res.send(JSON.stringify(order_id));
           res.end();
         }
         })
     })
   } else {
 
-    pool.query(`insert into orders(shipping_address, billing_address, order_date, total, tax_code) values(${address_id}, ${billing_address}, '${today}', ${total}, '${taxCode}') RETURNING order_id`, (err, resu) => {
+    pool.query(`insert into orders(shipping_address, billing_address, order_date, total, tax_code, user_id) values(${address_id}, ${billing_address}, '${today}', ${total}, '${taxCode}', ${user_id}) RETURNING order_id`, (err, resu) => {
       if (err) {
           throw err
       } else {
         updateOrderBooksTable(resu.rows[0].order_id, req.session.cart)
-        let user_id = req.session.userID;
-        updateTracking(resu.rows[0].order_id, address_id, user_id)
+        updateTracking(resu.rows[0].order_id)
         req.session.cart = [];
         res.statusCode = 201;
-        res.setHeader("Content-Type", "text/html");
+        res.setHeader("Content-Type", "application/json");
+        const order_id = resu.rows[0].order_id;
+        res.send(JSON.stringify(order_id));
         res.end();
       }
       })
   }
+}
+
+const trackOrder = (req, res) => {
+  const trackingID = parseInt(req.params.oid);
+  const userID = parseInt(req.session.userID);
+  console.log(userID);
+
+  pool.query(`SELECT * FROM tracking, orders WHERE orders.user_id = ${userID} AND tracking_id = ${trackingID} AND orders.order_id = tracking.tracking_id`, (error, results) => {
+    if (error) {
+      throw error
+    }
+
+    let tracking = results.rows[0];
+    console.log(tracking);
+
+    let content = pug.renderFile("pages/tracking.pug", {tracking : tracking});
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+  })
 }
 
 
@@ -533,11 +575,11 @@ function updateOrderBooksTable (order_id, books){
   }
 }
 
-function updateTracking(order_id, address_id, user_id){
+function updateTracking(order_id){
   const today = new Date().toISOString().slice(0, 10);
   const defaultLocation = "Ottawa, Ontario"
   
-  pool.query(`insert into tracking(tracking_id, updated_at, location, destination, user_id) values(${order_id}, '${today}', '${defaultLocation}', ${address_id}, ${user_id})`, (err, resu) => {
+  pool.query(`insert into tracking(tracking_id, updated_at, location) values(${order_id}, '${today}', '${defaultLocation}')`, (err, resu) => {
     if (err) {
         throw err
     }
@@ -576,10 +618,54 @@ function orderBooks(book_id) {
     })
 }
 
+const getReports = (req, res) => {
+  req.app.use("/public", express.static("./public"));
+  req.app.use("/stylesheets", express.static("stylesheets"));
+
+  pool.query(`SELECT count(*), sum(book.price_store), book.genre FROM book, order_book, orders
+  WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id
+  GROUP BY book.genre`, (error, sales_genre) => {
+    if (error) {
+      throw error
+    }
+    // console.log(sales_genre)
+    pool.query(`
+    select count(*), sum(price_store), author.name
+    from author
+    join book_author ON author.author_id = book_author.author_id
+    join book ON book.book_id = book_author.book_id
+    join order_book ON book.book_id = order_book.book_id
+    GROUP BY author.name
+    ORDER BY sum
+    LIMIT 20`, (erro, sales_authror) => {
+      if (erro) {
+        throw erro
+      }
+
+      // console.log(sales_authror)
+      pool.query(`SELECT count(*),sum(book.price_store), book.publisher_name FROM book, order_book, orders
+      WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id
+      GROUP BY book.publisher_name ORDER BY sum DESC LIMIT 20`, (err, sales_publisher) => {
+        if (err) {
+          throw err
+        }
+
+        //console.log(sales_publisher)
+          let content = pug.renderFile("pages/reports.pug", {sales_genre : sales_genre.rows, sales_author: sales_authror.rows, sales_publisher: sales_publisher.rows});
+          res.statusCode = 200;
+          res.setHeader("Content-Type", "text/html");
+          res.end(content);  
+      })
+    
+    })
+  
+  })
+
+}
+
   module.exports = {
       getBooks,
       getBook,
-      //searchBooks,
       addBook,
       removeBook,
       checkLogin,
@@ -593,5 +679,7 @@ function orderBooks(book_id) {
       getMain,
      getBookForm,
       addPublisher,
-      getPublisherForm
+      getPublisherForm,
+      trackOrder,
+      getReports
   }

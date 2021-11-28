@@ -10,16 +10,28 @@ br
 input(type="text" placeholder="page count" id="pagecnt")
 br
 br
-input(type="text" placeholder="price" id="price")
+input(type="text" placeholder="price we are paying" id="price_org")
+br
+br
+input(type="text" placeholder="price we are selling" id="price_store")
+br
+br
+input(type="text" placeholder="book quantity" id="book_cnt")
+br
+br
+select#genre(name='genre')
+    each genre in genres
+        option(value=genre) #{genre}
 br
 br
 input(type="text" placeholder="release date" id="date")
 br
 br
-input(type="text" placeholder="publisher name" id="publisher")
+select#publisher(name='publisher')
+    each publisher in publishers
+        option(value=publisher.publisher_name) #{publisher.publisher_name}
 br
 br
-
 input(type="text" placeholder="authors (separete with comma)" id="authors")
 br
 br

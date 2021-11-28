@@ -49,8 +49,16 @@ function removeBook(){
 
 }
 
-function reports(){
+function report(){
+    let req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            window.location.href = "../reports";
+        } 
+    }
 
+    req.open("GET", "http://localhost:3000/reports");
+    req.send();
 }
 
 function publishers(){
