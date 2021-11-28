@@ -11,6 +11,7 @@ body {
       color: white;
       margin-bottom: 40px;
       margin-left: 30px;
+      margin-top: 20px;
       display: inline-block;
   }
   .column {
@@ -34,13 +35,14 @@ body {
       overflow: hidden;
       background-color:black;
     }
-  #search {
+  .search {
       list-style-type: none;
       margin-top: 0;
       padding: 0;
       overflow: hidden;
       background-color:grey;
       align-content: center;
+      margin-bottom: 0;
     }
     
     li {
@@ -63,11 +65,11 @@ body {
     }
     #searchButton {
       margin-top: 22px;
-      margin-right: 50px;
+      margin-right: 10px;
     }
     #cartButton {
       margin-top: 22px;
-      margin-right: 50px;
+      margin-right: 10px;
     }
     button {
       background-color: black;
@@ -92,4 +94,18 @@ body {
     }
     #wkRprt{
       margin-bottom: 50px;
+    }
+    #searchTrackB {
+      margin-top: 22px;
+      margin-right: 50px;
+    }
+    h4 {
+      margin-right: 20px;
+      margin-left: 10px;
+    }
+    #login {
+      margin-top: 11px;
+    }
+    #logout {
+      margin-top: 11px;
     }

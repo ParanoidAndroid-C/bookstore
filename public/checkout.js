@@ -18,7 +18,10 @@ function checkout() {
     let req = new XMLHttpRequest();
     req.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 201) {
-            window.location.href = "/books";
+           // window.location.href = "/books";
+            console.log(this.responseText)
+            console.log(this)
+            alert("Your order was placed successfully! Your tracking id is: " + this.responseText);
         } 
     }
 

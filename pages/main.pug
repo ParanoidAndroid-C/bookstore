@@ -24,7 +24,7 @@ html
         li(class="searchList") 
             p ISBN: 
         li(class="searchInput") 
-            input(type="text" placeholder="Enter ISBN" id="bookGenre")
+            input(type="text" placeholder="Enter ISBN" id="bookISBN")
         li#searchButton
             button#searchB Search
         li#cartButton 
@@ -36,9 +36,10 @@ html
         div#operations
             button#addBook(onclick='addBook()') Add Book 
             br
+            input(type="text" placeholder="ISBN" id="isbn")
             button#removeBook(onclick='removeBook()') Remove Book 
             br
-            button#wkRprt(onclick='report()') Weekly Report 
+            button#wkRprt(onclick='report()') Reports
             br
             button#publsihers(onclick='publishers()') Publishers Info
 footer

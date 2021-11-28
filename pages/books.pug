@@ -5,35 +5,43 @@ html
         meta(charset="utf-8")
 
     header 
-      h1#title SAMI BOOKS
-      ul#search
-        li#searchText
-            h4 Search Book
-        li(class="searchList") 
-            p Title: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter Title" id="bookTitle")
-        li(class="searchList") 
-            p Author: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter Author" id="bookAuthor")
-        li(class="searchList") 
-            p Genre: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter Genre" id="bookGenre")
-        li(class="searchList") 
-            p ISBN: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter ISBN" id="bookGenre")
-        li#searchButton
-            button#searchB Search
-        li#cartButton 
-            button#cartB My Cart
-        li#login
-            if !loggedin
-                button#login Log In
-            else
-                button#logout Log Out
+        h1#title SAMI BOOKS
+        ul.search
+            li#searchText
+                h4 Search Book
+            li(class="searchList") 
+                p Title: 
+            li(class="searchInput") 
+                input(type="text" placeholder="Enter Title" id="bookTitle")
+            li(class="searchList") 
+                p Author: 
+            li(class="searchInput") 
+                input(type="text" placeholder="Enter Author" id="bookAuthor")
+            li(class="searchList") 
+                p Genre: 
+            li(class="searchInput") 
+                input(type="text" placeholder="Enter Genre" id="bookGenre")
+            li(class="searchList") 
+                p ISBN: 
+            li(class="searchInput") 
+                input(type="text" placeholder="Enter ISBN" id="bookISBN")
+            li#searchButton
+                button#searchB Search
+            li#cartButton 
+                button#cartB My Cart
+            li#login
+                if !loggedin
+                    button#login Log In
+                else
+                    button#logout Log Out
+                    ul#search
+        ul.search
+            li.searchText
+                h4 Track Your Order
+            li(class="searchInput") 
+                input(type="text" placeholder="Tracking ID" id="tracking_id")
+            li#searchBTracking
+                button#searchTrackB Track Order
 
     body
         div#main

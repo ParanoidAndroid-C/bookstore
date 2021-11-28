@@ -1,0 +1,18 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
+    padding: 30px;
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    background-color: lightpink;
+    color: white;
+    margin-bottom: 40px;
+    margin-left: 30px;
+    margin-top: 20px;
+    display: inline-block;
+}
+.column {
+  float: left;
+  width: 350px;
+  padding: 0 10px;
+}

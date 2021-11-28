@@ -32,6 +32,5 @@ function checkout() {
     }
 
     req.open("GET", "http://localhost:3000/checkout");
-    //req.setRequestHeader("Content-Type", "application/json");
     req.send();
 }
