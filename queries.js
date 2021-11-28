@@ -35,8 +35,7 @@ const pool = new Pool({
       console.log(author)
       console.log(isbn)
       console.log(genre)
-      pool.query(`SELECT DISTINCt(book_id, title) FROM book natural join book_author, author WHERE title LIKE '%${title}%' OR author.name LIKE '%${author}%' OR genre = '${genre}' OR book_id = '${isbn}' LIMIT 20`, (error, results) => {
-        if (error) {
+      pool.query(`SELECT DISTINCT(book_id, title) FROM book natural join book_author, author WHERE LOWER(title) LIKE LOWER('%${title}%') OR LOWER(author.name) LIKE LOWER('%${author}%') OR LOWER(genre) = LOWER('${genre}') OR book_id = '${isbn}' LIMIT 20`, (error, results) => {        if (error) {
           throw error
         }
         
@@ -203,9 +202,22 @@ console.log(book)
               throw error
           
             }
+            
+            let names = []
+
+            for (let i = 0; i  < resu.rows.length; i++) {
+              names.push(resu.rows[i].name);
+            }
+
+            for (let i = 0; i < authors.length; i++) {
+              if (!names.includes(authors[i])) {
+                addAuthor(authors[i], ISBN);
+              }
+    
+            }
 
             for (let i = 0; i < resu.rows.length; i++) {
-              pool.query(`insert into book_author(book_id, author_id) values(${ISBN}, ${resu.rows[i].author_id} )`, (err, r) => {
+              pool.query(`insert into book_author(book_id, author_id) values('${ISBN}', ${resu.rows[i].author_id} )`, (err, r) => {
                 if (err) {
                     res.statusCode = 401;
                     throw err
@@ -224,6 +236,21 @@ console.log(book)
               res.end(content);
         })  
       })       
+}
+
+function addAuthor(author, book_id) {
+    pool.query(`insert into author(name) values('${author}') RETURNING author_id`, (errors, resu) => {
+      if (errors) {
+          throw errors
+      }
+      const author_id = resu.rows[0].author_id;
+
+    pool.query(`insert into book_author(book_id, author_id) values('${book_id}', ${author_id})`, (err, re) => {
+        if (err) {
+            throw err
+        }
+        })
+      })
 }
 
 function updateTotalSpent(total_spent) {
