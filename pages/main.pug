@@ -6,32 +6,6 @@ html
 
     header 
       h1#title SAMI BOOKS
-      ul#search
-        li#searchText
-            h4 Search Book
-        li(class="searchList") 
-            p Title: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter Title" id="bookTitle")
-        li(class="searchList") 
-            p Author: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter Author" id="bookAuthor")
-        li(class="searchList") 
-            p Genre: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter Genre" id="bookGenre")
-        li(class="searchList") 
-            p ISBN: 
-        li(class="searchInput") 
-            input(type="text" placeholder="Enter ISBN" id="bookISBN")
-        li#searchButton
-            button#searchB Search
-        li#cartButton 
-            button#cartB My Cart
-        li#login
-            button#logout Log Out
-
     body
         div#operations
             button#addBook(onclick='addBook()') Add Book 
@@ -42,5 +16,7 @@ html
             button#wkRprt(onclick='report()') Reports
             br
             button#publsihers(onclick='publishers()') Publishers Info
+            br
+            button#logout Log Out
 footer
 script(src='/public/main.js')
