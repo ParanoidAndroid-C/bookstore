@@ -115,14 +115,20 @@ const pool = new Pool({
     pool.query(`${query}`, (error, results) => {
       if (error) {
         res.statusCode = 401;
+        res.end();
        // throw error
       }
-      console.log("ha")
-      console.log(results.rows);
-      let content = pug.renderFile("pages/customreports.pug", {results: results.rows});
+
+      if (results != undefined) {
+          
       res.statusCode = 201;
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(results.rows));
+      }
+      else {
+        res.statusCode = 401;
+        res.end();
+      }
     })
   }
 
