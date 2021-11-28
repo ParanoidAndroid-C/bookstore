@@ -101,6 +101,32 @@ const pool = new Pool({
   }
 
 
+  const getCustomReports = (req, res) => {
+    let content = pug.renderFile("pages/customreports.pug", {results: []});
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+  }
+ 
+  const postCustomReports = (req, res) => {
+    const query = req.body.query;
+    console.log(query);
+
+    pool.query(`${query}`, (error, results) => {
+      if (error) {
+        res.statusCode = 401;
+       // throw error
+      }
+      console.log("ha")
+      console.log(results.rows);
+      let content = pug.renderFile("pages/customreports.pug", {results: results.rows});
+      res.statusCode = 201;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(results.rows));
+    })
+  }
+
+
   const getBook = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
@@ -725,5 +751,7 @@ const getReports = (req, res) => {
       addPublisher,
       getPublisherForm,
       trackOrder,
-      getReports
+      getReports,
+      getCustomReports,
+      postCustomReports
   }

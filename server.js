@@ -83,6 +83,8 @@ app.post("/booksForm", [auth, db.addBook])
 app.post("/publisherForm", [auth, db.addPublisher])
 app.get("/publisherForm", [auth, db.getPublisherForm])
 app.get("/reports", [auth, db.getReports])
+app.get("/customreports", [auth, db.getCustomReports])
+app.post("/customreports", [auth, db.postCustomReports])
 
 
 function auth(req, res,next) {

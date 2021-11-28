@@ -1,0 +1,18 @@
+html
+    head
+        title Custom Reports 
+        link(href='/stylesheets/reports.css' rel='stylesheet')      
+        meta(charset="utf-8")
+
+input(type="text" placeholder="write your query here" id="query")
+br
+h3 supported schema names: orders, publisher, author, book
+br
+button#showResults(onclick='showResults()') Show Results 
+
+each result in results
+    p ha
+    p #{result}
+
+footer
+script(src='/public/customreports.js')

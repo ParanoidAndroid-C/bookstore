@@ -73,6 +73,19 @@ function publishers(){
     req.send();
 }
 
+
+function customReports(){
+    let req = new XMLHttpRequest();
+    req.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            window.location.href = "../customreports";
+        } 
+    }
+
+    req.open("GET", "http://localhost:3000/customreports");
+    req.send();
+}
+
 let logout = document.getElementById("logout");
 logout.onclick = () => {
     window.location.href = "../logout";

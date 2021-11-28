@@ -16,3 +16,15 @@
   width: 350px;
   padding: 0 10px;
 }
+
+#query {
+  width: 500px;
+  height: 200px;
+}
+
+button {
+  background-color: black;
+  color: white;
+  margin-left: 20px;
+  margin-top: 20px;
+}
