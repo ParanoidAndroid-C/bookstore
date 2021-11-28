@@ -33,3 +33,18 @@ main
             h3 #{sale.publisher_name}
             h4 total sold: #{sale.count}
             h4 total money earned: #{sale.sum}
+    br 
+    br
+    h2 Money sent to each publisher
+    br
+    each profit in profit_publisher
+        .column
+        .card 
+            h3 #{profit.publisher_name}
+            h4 total money sent: #{profit.round}
+    br
+    br
+    h2 This month summery
+    h3 in total you've spent: #{total_spent.spent}
+    h3 in total you've earned: #{total_income.sum}
+    h3 gross icnome: #{total_income.sum - total_spent.spent}

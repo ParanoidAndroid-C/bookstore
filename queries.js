@@ -677,13 +677,30 @@ const getReports = (req, res) => {
           throw err
         }
 
-        //console.log(sales_publisher)
-          let content = pug.renderFile("pages/reports.pug", {sales_genre : sales_genre.rows, sales_author: sales_authror.rows, sales_publisher: sales_publisher.rows});
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "text/html");
-          res.end(content);  
+        pool.query(`SELECT count(*),round(sum(book.price_store*book.publisher_prcnt/100), 2), book.publisher_name FROM book, order_book, orders
+        WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id
+        GROUP BY book.publisher_name ORDER BY round DESC LIMIT 20`, (err2, publisher_profit) => {
+          if (err2) {
+            throw err2
+          }
+
+          pool.query(`SELECT sum(total) from orders`, (err3, total_income) => {
+            if (err3) {
+              throw err3
+            } 
+            pool.query(`SELECT total_spent - 5000 AS spent from owner`, (err4, total_spent) => {
+              if (err4) {
+                throw err4
+              }  
+          
+            let content = pug.renderFile("pages/reports.pug", {sales_genre : sales_genre.rows, sales_author: sales_authror.rows, sales_publisher: sales_publisher.rows, profit_publisher: publisher_profit.rows, total_income: total_income.rows[0], total_spent: total_spent.rows[0]});
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "text/html");
+            res.end(content);  
+          })  
+        })
+        })
       })
-    
     })
   
   })
