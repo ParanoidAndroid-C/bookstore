@@ -12,7 +12,11 @@ html
         br
         input#ageR(type='number' placeholder='Age' required min=6 max=99)
         br
-        input#genreR(type='text' placeholder='Enter Your Favourite Genre' required='')
+        h4 pick your favourite genre:
+        select#genreR(name='genre')
+          each genre in genres
+            option(value=genre) #{genre}
+        br
         br
         input#passwordR(type='password' placeholder='Enter Your Password' required)
         br

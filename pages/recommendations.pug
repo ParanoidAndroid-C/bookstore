@@ -1,0 +1,19 @@
+html
+head
+  title Recommendations
+  link(rel='stylesheet' href='/stylesheets/reports.css')
+  meta(charset="utf-8")
+h2 Since your favorite genre is #{genre}, we recommend:
+each book in genre_top
+    -bid = book.book_id
+    .column
+    .card(onclick='showBook("'+bid+ '")')
+        p #{book.title}
+br
+br
+h2 See what's popular in your age group:
+each book in age_top
+    -bid = book.book_id
+    .column
+    .card(onclick='showBook("'+bid+ '")')
+        p #{book.title}

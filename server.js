@@ -58,9 +58,12 @@ app.get("/logout", (req, res, next) => {
 	}
 });
 
+
+const genres = ['sci-fi', 'romance', 'mystery', 'detecrive', 'classics', 'biography', 'history', 'horror']
+
 // register
 app.get("/register", (req, res, next)=> {
-	let content = pug.renderFile("pages/register.pug");
+	let content = pug.renderFile("pages/register.pug", {genres: genres});
 	res.statusCode = 200;
 	res.setHeader("Content-Type", "text/html");
 	res.end(content);
@@ -85,7 +88,8 @@ app.get("/publisherForm", [auth, db.getPublisherForm])
 app.get("/reports", [auth, db.getReports])
 app.get("/customreports", [auth, db.getCustomReports])
 app.post("/customreports", [auth, db.postCustomReports])
-
+app.get("/recommendations", [auth, db.getRecommendations]);
+ 
 
 function auth(req, res,next) {
 	if (!req.session.loggedin) {
