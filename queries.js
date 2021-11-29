@@ -101,6 +101,38 @@ const pool = new Pool({
   }
 
 
+  const getCustomReports = (req, res) => {
+    let content = pug.renderFile("pages/customreports.pug", {results: []});
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html");
+    res.end(content);
+  }
+ 
+  const postCustomReports = (req, res) => {
+    const query = req.body.query;
+    console.log(query);
+
+    pool.query(`${query}`, (error, results) => {
+      if (error) {
+        res.statusCode = 401;
+        res.end();
+       // throw error
+      }
+
+      if (results != undefined) {
+          
+      res.statusCode = 201;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(results.rows));
+      }
+      else {
+        res.statusCode = 401;
+        res.end();
+      }
+    })
+  }
+
+
   const getBook = (req, res) => {
     req.app.use("/public", express.static("./public"));
     req.app.use("/stylesheets", express.static("stylesheets"));
@@ -120,7 +152,6 @@ const pool = new Pool({
         //console.log(results.rows);
         //console.log(resu);
         let auth  = resu.rows;
-console.log(book)
         let content = pug.renderFile("pages/book.pug", {book: book, authors: auth});
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html");
@@ -307,6 +338,8 @@ const removeBook = (req, res) => {
           req.session.total = 0;
           req.session.userID = results.rows[0].user_id;
           req.session.address_id = results.rows[0].address_id;
+          req.session.genre = results.rows[0].genre;
+          req.session.age = results.rows[0].age;
         res.statusCode = 200;
         res.end();
       } else {
@@ -349,6 +382,7 @@ const removeBook = (req, res) => {
           req.session.userID = resu.rows[0].user_id;
           req.session.username = name;
           req.session.cart = [];
+          req.session.address_id = address_id;
           console.log(resu);
           res.statusCode = 201;
           res.end();
@@ -577,8 +611,10 @@ const trackOrder = (req, res) => {
 
   pool.query(`SELECT * FROM tracking, orders WHERE orders.user_id = ${userID} AND tracking_id = ${trackingID} AND orders.order_id = tracking.tracking_id`, (error, results) => {
     if (error) {
-      throw error
-    }
+      res.statusCode = 401;
+      res.end();
+      //throw error
+    } else {
 
     let tracking = results.rows[0];
     console.log(tracking);
@@ -587,6 +623,7 @@ const trackOrder = (req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/html");
     res.end(content);
+    }
   })
 }
 
@@ -638,8 +675,6 @@ function orderBooks(book_id) {
       if (errors) {
           throw errors
       }
-
-  
       })
 
     })
@@ -704,6 +739,37 @@ const getReports = (req, res) => {
     })
   
   })
+}
+
+const getRecommendations = (req, res) => {
+  const genre = req.session.genre;
+  const age = parseInt(req.session.age);
+  
+  pool.query(`select * from book
+  where genre = '${genre}' and average_rating is not null
+  order by average_rating desc
+  limit 10`, (err, genre_top) => {
+    if (err) {
+      throw err
+    }
+
+    pool.query(`select count(*), book.book_id, book.title
+    from book natural join order_book, orders, "user"
+    WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id AND "user".user_id = orders.user_id AND "user".age >${age - 3} AND "user".age >${age + 3}
+    group by book.book_id
+    order by count desc
+    limit 10`, (err, age_top) => {
+      if (err) {
+        throw err
+      }
+
+      let content = pug.renderFile("pages/recommendations.pug", {genre_top: genre_top.rows, age_top: age_top.rows, genre: genre});
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "text/html");
+      res.end(content); 
+    })
+
+  })
 
 }
 
@@ -725,5 +791,8 @@ const getReports = (req, res) => {
       addPublisher,
       getPublisherForm,
       trackOrder,
-      getReports
+      getReports,
+      getCustomReports,
+      postCustomReports,
+      getRecommendations
   }
