@@ -1,0 +1,168 @@
+bookID,authors,isbn
+1,Mary GrandPr√,439785960
+2,J.K. Rowling,439785960
+1,Mary GrandPr√,439358078
+2,J.K. Rowling,439358078
+2,J.K. Rowling,439554896
+2,J.K. Rowling,043965548X
+1,Mary GrandPr√,439682584
+2,J.K. Rowling,439682584
+2,J.K. Rowling,439827604
+3,Douglas Adams,517226952
+3,Douglas Adams,345453743
+3,Douglas Adams,1400052920
+4,Stephen Fry,739322206
+3,Douglas Adams,739322206
+3,Douglas Adams,517149257
+5,Bill Bryson,076790818X
+5,Bill Bryson,767915062
+5,Bill Bryson,767910435
+5,Bill Bryson,767903862
+5,Bill Bryson,076790382X
+5,Bill Bryson,60920084
+5,Bill Bryson,380713802
+5,Bill Bryson,380727501
+5,Bill Bryson,380715430
+6,J.R.R. Tolkien,345538374
+6,J.R.R. Tolkien,618517650
+6,J.R.R. Tolkien,618346252
+7,Alan  Lee,618260587
+6,J.R.R. Tolkien,618260587
+8,Christopher  Lee,618391002
+9,Richard Taylor,618391002
+10,Chris   Smith,618391002
+11,Jude Fisher,618510826
+12,Andreas  Schwarz,097669400X
+13,Thomas  Fuchs,097669400X
+14,Mike Clark,097669400X
+15,Leon Breedt,097669400X
+16,David Heinemeier Hansson,097669400X
+17,Dave Thomas,097669400X
+18,Gary Paulsen,689840926
+19,Keith Vasconcelles,1557344493
+20,Edward Sciranko,1557344493
+21,Donna Ickes,1557344493
+18,Gary Paulsen,385326505
+22,Molly Hatchet,1575606240
+23,Dale Peck,1595580271
+24,Willa Okati,1595962808
+25,Kate Hill,1595962808
+26,Lacey Savage,1595962808
+27,Judy Mays,1595962808
+28,Sahara Kelly,1595962808
+29,Angela Knight,1595962808
+30,Delia Sherman,670059676
+31,Patricia A. McKillip,141312629
+32,Zilpha Keatley Snyder,595321801
+33,Kate Horsley,1590301943
+34,Philippa Carr,449146979
+35,Edward P. Jones,61159174
+36,Kevin R. Free,006076273X
+35,Edward P. Jones,006076273X
+35,Edward P. Jones,60749911
+37,Satyajit Das,273704745
+38,Mark Smylie,1932386106
+39,William Howarth,374517193
+40,John McPhee,374517193
+40,John McPhee,374280398
+40,John McPhee,374519749
+40,John McPhee,374522596
+40,John McPhee,374518734
+40,John McPhee,374522871
+40,John McPhee,374519323
+40,John McPhee,374516006
+40,John McPhee,374520658
+41,Wendy Wasserstein,822205106
+41,Wendy Wasserstein,679734996
+42,Heidi Hayes Jacobs,1596670231
+42,Heidi Boyd,1581807740
+43,Rolland Baker,800793617
+44,Heidi Baker,800793617
+42,Heidi Hayes Jacobs,871202867
+45,Angelo  Rinaldi,753454947
+46,Beverly Cleary,753454947
+47,Johanna Spyri,753454947
+42,Heidi Hayes Jacobs,871209993
+44,Heidi Baker,1852402873
+43,Rolland Baker,1852402873
+48,Arlene Eisenberg,761129588
+49,Sharon Mazel,761129588
+50,Heidi Murkoff,761129588
+51,Libby Keatinge,972016414
+52,Heidi Fleiss,972016414
+53,Heidi Boyd,1581805632
+54,Frank Herbert,441294677
+54,Frank Herbert,441102670
+54,Frank Herbert,441172695
+55,Brian Herbert,765306476
+54,Frank Herbert,399128980
+56,Kevin J. Anderson,765353709
+55,Brian Herbert,765353709
+54,Frank Herbert,765353709
+54,Frank Herbert,441328008
+57,Gary Russell,618212906
+58,Bryce Courtenay,034541005X
+58,Bryce Courtenay,385732546
+59,Thomas G. Addington,785260056
+60,Stephen R. Graves,785260056
+61,John C. Maxwell,785260056
+62,Dave Lakhani,471780936
+63,Louis E. Catron,325001537
+64,Adam Ginsberg,006076287X
+65,Marsha Collier,470045299
+66,Lisa Suttora,72262788
+67,Chris Malta,72262788
+68,Marsha Collier,764569244
+69,Julia Wilkinson,471933821
+68,Marsha Collier,764559915
+68,Marsha Collier,764584383
+70,Leonard Richardson,596523696
+71,Lucas Carlson,596523696
+72,Ruby Ann Boxcar,806523492
+72,Ruby Ann Boxcar,806525363
+73,Rob Orsini,596527314
+74,Larissa Volokhonsky,143035002
+75,Richard Pevear,143035002
+76,Leo Tolstoy,143035002
+77,Priscilla Meyer,451528611
+76,Leo Tolstoy,451528611
+76,Leo Tolstoy,140449175
+76,Leo Tolstoy,822001837
+78,Marianne Sturman,822001837
+76,Leo Tolstoy,1593080271
+76,Leo Tolstoy,486437965
+76,Leo Tolstoy,1593081774
+79,Gloria Goldreich,778322270
+80,Anthony Thorlby,521313252
+81,Mulk Raj Anand,140183957
+82,John Banville,679767479
+83,Eliot Ness,1568491980
+84,Narendra Jadhav,743270797
+85,V.T. Rajshekar,932863051
+86,Vasant Moon,742508803
+87,Barry R. Cournoyer,205358624
+88,John Carratello,1557344035
+89,George Smoot,380720442
+90,Madeleine L'Engle,821925326
+91,Tara MacCarthy,043927169X
+92,Madeleine L'Engle,606105263
+93,Cynthia Harrod-Eagles,751506435
+94,Charles Todd,006078671X
+95,Ewan McGregor,743499344
+96,Daniel Abraham,765313405
+97,Charles Willeford,1400032490
+97,Charles Willeford,1400032482
+97,Charles Willeford,1400032466
+97,Charles Willeford,679732527
+98,Tom Wolfe,312424442
+99,Edward Lear,806930772
+100,Quentin Blake,140366601
+101,Henry Miller,811201120
+101,Henry Miller,080213016X
+101,Henry Miller,802131786
+101,Henry Miller,802151825
+101,Henry Miller,802151787
+101,Henry Miller,802151809
+101,Henry Miller,811201066
+102,Henry James,141439637
+102,Henry James,1593080964
