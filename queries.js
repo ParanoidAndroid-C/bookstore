@@ -35,7 +35,15 @@ const pool = new Pool({
       console.log(author)
       console.log(isbn)
       console.log(genre)
-      pool.query(`SELECT DISTINCT(book_id, title) FROM book natural join book_author, author WHERE LOWER(title) LIKE LOWER('%${title}%') OR LOWER(author.name) LIKE LOWER('%${author}%') OR LOWER(genre) = LOWER('${genre}') OR book_id = '${isbn}' LIMIT 20`, (error, results) => {        if (error) {
+      pool.query(`SELECT DISTINCT(book.book_id, title) FROM book
+      join book_author ON book.book_id = book_author.book_id
+      join author ON author.author_id = book_author.author_id
+      WHERE LOWER(title) LIKE LOWER('%${title}%') 
+      OR LOWER(author.name) LIKE LOWER('%${author}%')
+      OR LOWER(genre) = LOWER('${genre}') 
+      OR book.book_id = '${isbn}'
+      LIMIT 20`, (error, results) => {   
+        if (error) {
           throw error
         }
         
@@ -370,7 +378,6 @@ const removeBook = (req, res) => {
       }
 
     const address_id = results.rows[0].address_id;
-    //console.log(address_id);
 
     pool.query(`insert into \"user\"(name, email, password, age, genre, address_id) values('${name}', '${email}', '${password}', ${age}, '${genre}', ${address_id}) RETURNING user_id`, (err, resu) => {
       if (err) {
@@ -383,6 +390,8 @@ const removeBook = (req, res) => {
           req.session.username = name;
           req.session.cart = [];
           req.session.address_id = address_id;
+          req.session.genre = genre;
+          req.session.age = age;
           console.log(resu);
           res.statusCode = 201;
           res.end();
@@ -758,8 +767,8 @@ const getRecommendations = (req, res) => {
     WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id AND "user".user_id = orders.user_id AND "user".age >${age - 3} AND "user".age >${age + 3}
     group by book.book_id
     order by count desc
-    limit 10`, (err, age_top) => {
-      if (err) {
+    limit 10`, (er, age_top) => {
+      if (er) {
         throw err
       }
 
