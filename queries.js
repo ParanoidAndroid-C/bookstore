@@ -583,7 +583,9 @@ const postCheckout = (req, res) => {
         if (err) {
             throw err
         } else {
-          updateOrderBooksTable(resu.rows[0].order_id, req.session.cart)
+          let books = new Set();
+          req.session.cart.forEach(item => books.add(item))
+          updateOrderBooksTable(resu.rows[0].order_id, books)
           updateTracking(resu.rows[0].order_id)
           req.session.cart = [];
           res.statusCode = 201;
@@ -600,7 +602,9 @@ const postCheckout = (req, res) => {
       if (err) {
           throw err
       } else {
-        updateOrderBooksTable(resu.rows[0].order_id, req.session.cart)
+        let books = new Set();
+        req.session.cart.forEach(item => books.add(item))
+        updateOrderBooksTable(resu.rows[0].order_id, books)
         updateTracking(resu.rows[0].order_id)
         req.session.cart = [];
         res.statusCode = 201;
@@ -660,7 +664,7 @@ function updateTracking(order_id){
 }
 
 function updateBookCnt(book_id) {
-  pool.query(`update book set book_cnt = book_cnt - 1 RETURNING book_cnt`, (err, resu) => {
+  pool.query(`update book set book_cnt = book_cnt - 1 where book_id = '${book_id}' RETURNING book_cnt`, (err, resu) => {
     if (err) {
         throw err
     }
@@ -673,7 +677,7 @@ function updateBookCnt(book_id) {
 }
 
 function orderBooks(book_id) {
-  pool.query(`update book set book_cnt = 15 RETURNING book_cnt, price_org`, (err, resu) => {
+  pool.query(`update book set book_cnt = 15 where book_id = '${book_id}' RETURNING book_cnt, price_org`, (err, resu) => {
     if (err) {
         throw err
     }
