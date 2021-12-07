@@ -665,20 +665,7 @@ function updateTracking(order_id){
 }
 
 function updateBookCnt(book_id) {
-  pool.query(`update book set book_cnt = book_cnt - 1 where book_id = '${book_id}' RETURNING book_cnt`, (err, resu) => {
-    if (err) {
-        throw err
-    }
-
-    let book_cnt = parseInt(resu.rows[0].book_cnt)
-    if (book_cnt < 10) {
-      orderBooks(book_id);
-    }
-    })
-}
-
-function orderBooks(book_id) {
-  pool.query(`update book set book_cnt = 15 where book_id = '${book_id}' RETURNING book_cnt, price_org`, (err, resu) => {
+  pool.query(`update book set book_cnt = book_cnt - 1 where book_id = '${book_id}' RETURNING book_cnt, price_org`, (err, resu) => {
     if (err) {
         throw err
     }
