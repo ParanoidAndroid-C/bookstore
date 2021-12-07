@@ -1,0 +1,20 @@
+COPY publisher
+FROM 'C:\Users\Lomta\Desktop\3005\books_dataset\publisher.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY book
+FROM 'C:\Users\Lomta\Desktop\3005\books_dataset\books.csv'
+DELIMITER ','
+CSV HEADER;
+
+
+COPY author
+FROM 'C:\Users\Lomta\Desktop\3005\books_dataset\author.csv'
+DELIMITER ','
+CSV HEADER;
+
+COPY book_author
+FROM 'C:\Users\Lomta\Desktop\3005\books_dataset\booksAuthor.csv'
+DELIMITER ','
+CSV HEADER;
