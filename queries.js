@@ -671,8 +671,9 @@ function updateBookCnt(book_id) {
     }
 
     const book_price = parseFloat(resu.rows[0].price_org);
+    const owner_id = 1;
 
-    pool.query(`update owner set total_spent = total_spent + 6 * ${book_price}`, (errors, resu) => {
+    pool.query(`update owner set total_spent = total_spent + 6 * ${book_price} where owner_id = ${owner_id}`, (errors, resu) => {
       if (errors) {
           throw errors
       }
