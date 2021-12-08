@@ -642,12 +642,13 @@ const trackOrder = (req, res) => {
 
 
 function updateOrderBooksTable (order_id, books){
-  for (let i = 0; i < books.length; i++) {
-    pool.query(`insert into order_book(order_id, book_id) values(${order_id}, '${books[i]}')`, (err, resu) => {
+  for (let book of books) {
+    pool.query(`insert into order_book(order_id, book_id) values(${order_id}, '${book}')`, (err, resu) => {
       if (err) {
           throw err
       }
-      updateBookCnt(books[i]);
+      console.log("updated successfully")
+      updateBookCnt(book);
       })
   }
 }
@@ -664,27 +665,15 @@ function updateTracking(order_id){
 }
 
 function updateBookCnt(book_id) {
-  pool.query(`update book set book_cnt = book_cnt - 1 where book_id = '${book_id}' RETURNING book_cnt`, (err, resu) => {
-    if (err) {
-        throw err
-    }
-
-    let book_cnt = parseInt(resu.rows[0].book_cnt)
-    if (book_cnt < 10) {
-      orderBooks(book_id);
-    }
-    })
-}
-
-function orderBooks(book_id) {
-  pool.query(`update book set book_cnt = 15 where book_id = '${book_id}' RETURNING book_cnt, price_org`, (err, resu) => {
+  pool.query(`update book set book_cnt = book_cnt - 1 where book_id = '${book_id}' RETURNING book_cnt, price_org`, (err, resu) => {
     if (err) {
         throw err
     }
 
     const book_price = parseFloat(resu.rows[0].price_org);
+    const owner_id = 1;
 
-    pool.query(`update owner set total_spent = total_spent + 6 * ${book_price}`, (errors, resu) => {
+    pool.query(`update owner set total_spent = total_spent + 6 * ${book_price} where owner_id = ${owner_id}`, (errors, resu) => {
       if (errors) {
           throw errors
       }
@@ -718,16 +707,12 @@ const getReports = (req, res) => {
       }
 
       // console.log(sales_authror)
-      pool.query(`SELECT count(*),sum(book.price_store), book.publisher_name FROM book, order_book, orders
-      WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id
-      GROUP BY book.publisher_name ORDER BY sum DESC LIMIT 20`, (err, sales_publisher) => {
+      pool.query(`SELECT * FROM sales_publisher LIMIT 20`, (err, sales_publisher) => {
         if (err) {
           throw err
         }
 
-        pool.query(`SELECT count(*),round(sum(book.price_store*book.publisher_prcnt/100), 2), book.publisher_name FROM book, order_book, orders
-        WHERE book.book_id = order_book.book_id AND orders.order_id = order_book.order_id
-        GROUP BY book.publisher_name ORDER BY round DESC LIMIT 20`, (err2, publisher_profit) => {
+        pool.query(`SELECT * FROM publisher_profit LIMIT 20`, (err2, publisher_profit) => {
           if (err2) {
             throw err2
           }
