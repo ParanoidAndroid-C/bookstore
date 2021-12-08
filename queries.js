@@ -5,6 +5,7 @@ const Pool = require('pg').Pool;
 
 const genres = ['sci-fi', 'romance', 'mystery', 'detecrive', 'classics', 'biography', 'history', 'horror']
 
+// change this info according to your credentials
 const pool = new Pool({
         user: 'postgres',
         host: 'localhost',
